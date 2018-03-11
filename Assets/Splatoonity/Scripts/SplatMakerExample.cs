@@ -6,6 +6,8 @@ public class SplatMakerExample : MonoBehaviour {
 	
 	Vector4 channelMask = new Vector4(1,0,0,0);
 
+    Color testColor;
+
 	int splatsX = 1;
 	int splatsY = 1;
 
@@ -38,14 +40,31 @@ public class SplatMakerExample : MonoBehaviour {
 		if( Input.GetKeyDown (KeyCode.Alpha4) ){
 			channelMask = new Vector4(0,0,0,1);
 		}
-			
-		// Cast a ray from the camera to the mouse pointer and draw a splat there.
-		// This just picks a rendom scale and bias for a 4x4 splat atlas
-		// You could use a larger atlas of splat textures and pick a scale and offset for the specific splat you want to use
-		if (Input.GetMouseButton (0)) {
-			
-            
 
+            // Cast a ray from the camera to the mouse pointer and draw a splat there.
+            // This just picks a rendom scale and bias for a 4x4 splat atlas
+            // You could use a larger atlas of splat textures and pick a scale and offset for the specific splat you want to use
+            if (Input.GetMouseButton (0)) {
+			
+                RaycastHit detectColorHit;
+
+                if (Physics.Raycast(transform.position, Vector3.down, out detectColorHit, 100))
+                {
+                    Renderer rend = detectColorHit.transform.GetComponent<Renderer>();
+                    MeshCollider meshCollider = detectColorHit.collider as MeshCollider;
+
+                    if (rend == null || rend.sharedMaterial == null || rend.sharedMaterial.mainTexture == null)
+                        return;
+
+                    Texture2D tex = rend.material.mainTexture as Texture2D;
+                    Vector2 pixelUV = detectColorHit.textureCoord;
+
+                    Color pixelColor = tex.GetPixel((int)pixelUV.x, (int)pixelUV.y);
+
+                    testColor = pixelColor;
+                                    
+                }
+            
 			//Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );                
 			RaycastHit hit;
 			if( Physics.Raycast( transform.position, Vector3.down, out hit, 100 ) ){

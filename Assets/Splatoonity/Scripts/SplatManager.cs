@@ -244,9 +244,7 @@ public class SplatManager : MonoBehaviour {
 				Shader.SetGlobalTexture ("_SplatTex", splatTexAlt);
 				evenFrame = true;
 			}
-
 		}
-
 	}
 		
 	// Update the scores by mipping the splat texture down to a 4x4 texture and sampling the pixels.
