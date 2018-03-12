@@ -12,8 +12,9 @@ public class DogController : MonoBehaviour
 	private Transform _camera;
 	private Transform _frontPivot;
 	private Transform _rearPivot;
+	private Rigidbody _front;
+	private Rigidbody _rear;
 	private float fx, fz, rx, rz, y;
-	private Vector3 pVector;
 
 	void Start()
 	{
@@ -22,7 +23,9 @@ public class DogController : MonoBehaviour
 		_camera.LookAt(transform);
 		_frontPivot = transform.GetChild(2);
 		_rearPivot = transform.GetChild(3);
-		pVector = new Vector3(0,0,0);
+		//_front = _frontPivot.GetComponent<Rigidbody> ();
+		//_rear = _rearPivot.GetComponent<Rigidbody> ();
+		_front = GetComponent<Rigidbody> ();
 	}
 
 	void Update()
@@ -32,20 +35,25 @@ public class DogController : MonoBehaviour
 	//		return;
 	//	}
 	
-		fx = Input.GetAxis("Horizontal") * Time.deltaTime * FrontTurnSpeed;
-		fz = Input.GetAxis("Vertical") * Time.deltaTime * FrontRunSpeed;
-		rx = Input.GetAxis("Horizontal2") * Time.deltaTime * FrontTurnSpeed;
-		rz = Input.GetAxis("Vertical2") * Time.deltaTime * FrontRunSpeed;
-		pVector = Vector3.Project(Vector3.forward, pVector);
-		pVector /= 4;
-		pVector += new Vector3(0, 0, fz + rz);
-		transform.Translate(pVector);
-		transform.RotateAround(_frontPivot.position, Vector3.up, fx);
+		fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
+		fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
+		rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
+		rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
+		//Debug.Log ("fx = " + fx + "fz = " + fz + "rx =" + rx + "rz =" + rz);
+
+	}
+
+	void FixedUpdate(){
+		//_front.AddForce (new Vector3 (fx, 0, fz), ForceMode.Impulse);
+		//_rear.AddForce (new Vector3 (rx, 0, rz));
+		_front.AddForceAtPosition(transform.forward * fz, _frontPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.right * fx, _frontPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.forward * rz, _rearPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.right * rx, _rearPivot.position, ForceMode.Impulse);
 	}
 
 	void LateUpdate()
 	{
-		transform.RotateAround(_rearPivot.position, Vector3.up, rx);
 		_camera.position = transform.position + new Vector3(0,20,0);
 	}
 }
