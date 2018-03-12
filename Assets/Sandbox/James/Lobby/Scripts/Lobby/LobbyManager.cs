@@ -5,12 +5,14 @@ using UnityEngine.Networking;
 using UnityEngine.Networking.Types;
 using UnityEngine.Networking.Match;
 using System.Collections;
+using System.Collections.Generic;
 
 
 namespace Prototype.NetworkLobby
 {
     public class LobbyManager : NetworkLobbyManager 
     {
+        private Dictionary<int, Teams.Team> currentPlayers;
         static short MsgKicked = MsgType.Highest + 1;
 
         static public LobbyManager s_Singleton;
@@ -38,6 +40,7 @@ namespace Prototype.NetworkLobby
         public Text statusInfo;
         public Text hostInfo;
 
+
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
         [HideInInspector]
@@ -54,7 +57,8 @@ namespace Prototype.NetworkLobby
         protected LobbyHook _lobbyHooks;
 
         void Start()
-        {
+        {   
+            currentPlayers = new Dictionary<int, Teams.Team>(); 
             s_Singleton = this;
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = mainMenuPanel;
@@ -275,8 +279,14 @@ namespace Prototype.NetworkLobby
         //But OnLobbyClientConnect isn't called on hosting player. So we override the lobbyPlayer creation
         public override GameObject OnLobbyServerCreateLobbyPlayer(NetworkConnection conn, short playerControllerId)
         {
+            if(!currentPlayers.ContainsKey(conn.connectionId))
+            {
+                currentPlayers.Add(conn.connectionId, Teams.Team.DOGS);
+            }
             GameObject obj = Instantiate(lobbyPlayerPrefab.gameObject) as GameObject;
 
+            Debug.Log(obj);
+        
             LobbyPlayer newPlayer = obj.GetComponent<LobbyPlayer>();
             newPlayer.ToggleJoinButton(numPlayers + 1 >= minPlayers);
 
@@ -293,6 +303,26 @@ namespace Prototype.NetworkLobby
             }
 
             return obj;
+        }
+
+        public void SetTeamLobby(NetworkConnection conn, Teams.Team team)
+        {
+            if(currentPlayers.ContainsKey(conn.connectionId))
+            {
+                currentPlayers[conn.connectionId] = team;
+            }
+        }
+
+        public override GameObject OnLobbyServerCreateGamePlayer(NetworkConnection conn, short playerControllerId)
+        {
+            int team = (int) currentPlayers[conn.connectionId];
+
+            GameObject playerPrefab = (GameObject)GameObject.Instantiate(spawnPrefabs[team], 
+                startPositions[conn.connectionId].position, 
+                Quaternion.identity);
+            
+            Debug.Log("Team " + 1 + " Prefab " + playerPrefab + " connId " + conn.connectionId);
+            return playerPrefab;
         }
 
         public override void OnLobbyServerPlayerRemoved(NetworkConnection conn, short playerControllerId)

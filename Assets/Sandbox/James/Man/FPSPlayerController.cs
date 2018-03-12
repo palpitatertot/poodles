@@ -13,8 +13,12 @@ public class FPSPlayerController : NetworkBehaviour
 	void Start()
 	{
 		_pitch = 0f;
-		_camera = transform.GetChild (0);	
-		_camera.gameObject.GetComponent<Camera> ().cullingMask &= ~(1 << LayerMask.NameToLayer("CameraInvisible"));
+		if (isLocalPlayer){
+			_camera = Camera.allCameras[0].transform;
+			_camera.position = transform.position - new Vector3(0,1,.5f);
+			_camera.gameObject.GetComponent<Camera> ().cullingMask &= ~(1 << LayerMask.NameToLayer("CameraInvisible"));
+			_camera.SetParent(transform);
+		}
 	}
 
 	void Update()

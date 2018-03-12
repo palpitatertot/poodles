@@ -172,6 +172,7 @@ namespace Prototype.NetworkLobby
                 readyButton.interactable = false;
                 colorButton.interactable = false;
                 nameInput.interactable = false;
+                teamButton.interactable = false;
             }
             else
             {
@@ -183,6 +184,7 @@ namespace Prototype.NetworkLobby
                 readyButton.interactable = isLocalPlayer;
                 colorButton.interactable = isLocalPlayer;
                 nameInput.interactable = isLocalPlayer;
+                teamButton.interactable = isLocalPlayer;
             }
         }
 
@@ -215,7 +217,24 @@ namespace Prototype.NetworkLobby
 				teamButton.GetComponent<Image> ().sprite = manTeamImage;
 			}
 
+            if(isServer)
+            {
+                RpcUpdateTeam(newTeam);
+            } else
+            {
+                CmdUpdateTeam(newTeam);
+            }
+
 		}
+
+        [ClientRpc]
+        public void RpcUpdateTeam(Teams.Team team){
+            CmdUpdateTeam(team);
+        }
+        [Command]
+        public void CmdUpdateTeam(Teams.Team team){
+            LobbyManager.s_Singleton.SetTeamLobby(GetComponent<NetworkIdentity>().connectionToClient, team);
+        }
         //===== UI Handler
 
         //Note that those handler use Command function, as we need to change the value on the server not locally

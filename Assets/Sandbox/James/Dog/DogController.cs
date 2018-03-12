@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
 
-public class DogController : MonoBehaviour
+public class DogController : NetworkBehaviour
 {
 	public float FrontRunSpeed;
 	public float RearRunSpeed;
@@ -18,11 +18,14 @@ public class DogController : MonoBehaviour
 
 	void Start()
 	{
-		_camera = transform.GetChild (0);	
+		if (isLocalPlayer){
+			_camera = Camera.allCameras[0].transform;
+			_camera.SetParent(transform);
+		}
 		_camera.position = transform.position + new Vector3(0,20,0);
 		_camera.LookAt(transform);
-		_frontPivot = transform.GetChild(2);
-		_rearPivot = transform.GetChild(3);
+		_frontPivot = transform.Find("frontPivot");
+		_rearPivot = transform.Find("rearPivot");
 		//_front = _frontPivot.GetComponent<Rigidbody> ();
 		//_rear = _rearPivot.GetComponent<Rigidbody> ();
 		_front = GetComponent<Rigidbody> ();
@@ -30,10 +33,10 @@ public class DogController : MonoBehaviour
 
 	void Update()
 	{
-		//if (!isLocalPlayer)
-		//{
-	//		return;
-	//	}
+		if (!isLocalPlayer)
+		{
+			return;
+		}
 	
 		fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
 		fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
