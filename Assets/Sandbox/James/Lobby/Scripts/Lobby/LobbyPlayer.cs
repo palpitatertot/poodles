@@ -15,6 +15,9 @@ namespace Prototype.NetworkLobby
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
 
+		public Sprite dogTeamImage;
+		public Sprite manTeamImage;
+		public Button teamButton;
         public Button colorButton;
         public InputField nameInput;
         public Button readyButton;
@@ -29,6 +32,8 @@ namespace Prototype.NetworkLobby
         public string playerName = "";
         [SyncVar(hook = "OnMyColor")]
         public Color playerColor = Color.white;
+		[SyncVar(hook = "OnMyTeam")]
+		public Teams.Team playerTeam = Teams.Team.DOGS;
 
         public Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
         public Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
@@ -64,6 +69,7 @@ namespace Prototype.NetworkLobby
             //will be created with the right value currently on server
             OnMyName(playerName);
             OnMyColor(playerColor);
+			OnMyTeam (playerTeam);
         }
 
         public override void OnStartAuthority()
@@ -122,12 +128,16 @@ namespace Prototype.NetworkLobby
             //we switch from simple name display to name input
             colorButton.interactable = true;
             nameInput.interactable = true;
+			teamButton.interactable = true;
 
             nameInput.onEndEdit.RemoveAllListeners();
             nameInput.onEndEdit.AddListener(OnNameChanged);
 
             colorButton.onClick.RemoveAllListeners();
             colorButton.onClick.AddListener(OnColorClicked);
+
+			teamButton.onClick.RemoveAllListeners();
+			teamButton.onClick.AddListener(OnTeamClicked);
 
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyClicked);
@@ -193,8 +203,19 @@ namespace Prototype.NetworkLobby
         {
             playerColor = newColor;
             colorButton.GetComponent<Image>().color = newColor;
+			teamButton.GetComponent<Image> ().color = newColor;
         }
 
+		public void OnMyTeam(Teams.Team newTeam)
+		{
+			playerTeam = newTeam;
+			if (newTeam == Teams.Team.DOGS) {
+				teamButton.GetComponent<Image> ().sprite = dogTeamImage;
+			} else {
+				teamButton.GetComponent<Image> ().sprite = manTeamImage;
+			}
+
+		}
         //===== UI Handler
 
         //Note that those handler use Command function, as we need to change the value on the server not locally
@@ -203,6 +224,11 @@ namespace Prototype.NetworkLobby
         {
             CmdColorChange();
         }
+
+		public void OnTeamClicked()
+		{
+			CmdTeamChange();
+		}
 
         public void OnReadyClicked()
         {
@@ -245,6 +271,16 @@ namespace Prototype.NetworkLobby
         }
 
         //====== Server Command
+
+		[Command]
+		public void CmdTeamChange()
+		{
+			if (playerTeam == Teams.Team.DOGS){
+				playerTeam = Teams.Team.MAN;
+			} else {
+				playerTeam = Teams.Team.DOGS;
+			}
+		}
 
         [Command]
         public void CmdColorChange()
