@@ -2,6 +2,8 @@
 using UnityEngine.Rendering;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
+
 
 //all the stuff directly related in handling/generating splats
 
@@ -31,7 +33,7 @@ public class SplatManagerSystem
 
 	public Vector4 scores;
 	
-	internal List<Splat> m_Splats = new List<Splat>();
+	internal SyncListStruct<Splat> m_Splats = new SyncListStruct<Splat>();
 	
 	public void AddSplat (Splat splat)
 	{
@@ -41,7 +43,7 @@ public class SplatManagerSystem
 
 }
 
-public class SplatManager : MonoBehaviour {
+public class SplatManager : NetworkBehaviour {
 
 	public int sizeX;
 	public int sizeY;
