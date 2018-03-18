@@ -13,8 +13,10 @@ public class DogController : NetworkBehaviour
 	private Transform _frontPivot;
 	private Transform _rearPivot;
 	private Rigidbody _front;
-	private Rigidbody _rear;
+    private Rigidbody _rear;
 	private float fx, fz, rx, rz, y;
+    Vector4 _splatChannel = new Vector4(1, 0, 0, 0); // TODO MAKE ENUM
+    private Splatter _emitter;
 
 	void Start()
 	{
@@ -29,6 +31,9 @@ public class DogController : NetworkBehaviour
 		//_front = _frontPivot.GetComponent<Rigidbody> ();
 		//_rear = _rearPivot.GetComponent<Rigidbody> ();
 		_front = GetComponent<Rigidbody> ();
+		_emitter = GetComponent<Splatter>();
+		_emitter.SetEmitter(transform.Find("rearPivot"));
+        _emitter.SetChannel(_splatChannel);
 	}
 
 	void Update()
@@ -43,6 +48,10 @@ public class DogController : NetworkBehaviour
 		rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
 		rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
 		//Debug.Log ("fx = " + fx + "fz = " + fz + "rx =" + rx + "rz =" + rz);
+		if (Input.GetKey(KeyCode.Space))
+		{
+			_emitter.Splat();
+		}
 
 	}
 

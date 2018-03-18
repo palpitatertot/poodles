@@ -45,25 +45,6 @@ public class SplatMakerExample : MonoBehaviour {
             // This just picks a rendom scale and bias for a 4x4 splat atlas
             // You could use a larger atlas of splat textures and pick a scale and offset for the specific splat you want to use
             if (Input.GetMouseButton (0)) {
-			
-                RaycastHit detectColorHit;
-
-                if (Physics.Raycast(transform.position, Vector3.down, out detectColorHit, 100))
-                {
-                    Renderer rend = detectColorHit.transform.GetComponent<Renderer>();
-                    MeshCollider meshCollider = detectColorHit.collider as MeshCollider;
-
-                    if (rend == null || rend.sharedMaterial == null || rend.sharedMaterial.mainTexture == null)
-                        return;
-
-                    Texture2D tex = rend.material.mainTexture as Texture2D;
-                    Vector2 pixelUV = detectColorHit.textureCoord;
-
-                    Color pixelColor = tex.GetPixel((int)pixelUV.x, (int)pixelUV.y);
-
-                    testColor = pixelColor;
-                                    
-                }
             
 			//Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );                
 			RaycastHit hit;

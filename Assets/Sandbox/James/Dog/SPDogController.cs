@@ -14,7 +14,10 @@ public class SPDogController : MonoBehaviour //NetworkBehaviour
 	private Transform _rearPivot;
 	private Rigidbody _front;
 	private Rigidbody _rear;
+	private Splatter _emitter;
 	private float fx, fz, rx, rz, y;
+	Vector4 _splatColor = new Vector4(1,0,0,0);
+	
 
 	void Start()
 	{
@@ -25,6 +28,9 @@ public class SPDogController : MonoBehaviour //NetworkBehaviour
 		_frontPivot = transform.Find("frontPivot");
 		_rearPivot = transform.Find("rearPivot");
 		_front = GetComponent<Rigidbody> ();
+		_emitter = GetComponent<Splatter> ();
+		_emitter.SetEmitter(transform.Find("rearPivot"));
+		//_emitter.SetColor = _splatColor;
 	}
 
 	void Update()
@@ -35,6 +41,10 @@ public class SPDogController : MonoBehaviour //NetworkBehaviour
 		rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
 		rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
 		//Debug.Log ("fx = " + fx + "fz = " + fz + "rx =" + rx + "rz =" + rz);
+		
+		if (Input.GetKey (KeyCode.Space)) {
+			_emitter.Splat();
+		}	
 
 	}
 

@@ -11,3 +11,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Sandbox/James/TestLevel.unity
     guid: e51be110a795e41d888f8287294df107
+  - enabled: 1
+    path: Assets/Sandbox/James/Pee_Test_Scene.unity
+    guid: 8e44ef74a78c442b9a23db097fdbaf06

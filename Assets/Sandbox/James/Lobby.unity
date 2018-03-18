@@ -615,6 +615,11 @@ Prefab:
       value: 
       objectReference: {fileID: 1750133995269780, guid: e6f4eff624dbb41bd9b3639b89754dea,
         type: 2}
+    - target: {fileID: 114044569559339282, guid: a3542564c8ddf4b1aa312e5c0afd485e,
+        type: 2}
+      propertyPath: m_PlayScene
+      value: Pee_Test_Scene
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a3542564c8ddf4b1aa312e5c0afd485e, type: 2}
   m_IsPrefabParent: 0

@@ -1,5 +1,8 @@
 ﻿Shader "Splatoonity/SplatShader" {
 	Properties {
+        _Dog0Color ("Dog0Color", Color) = (0,1,0,0)
+        _Dog1Color ("Dog1Color", Color) = (1,0,0,0)
+        _Dog2Color ("Dog2Color", Color) = (0,0,1,0)
 		_Color ("Color", Color) = (1,1,1,1)
 		_MainTex ("Albedo (RGB)", 2D) = "white" {}
 		_BumpTex ("Normal", 2D) = "bump" {}
@@ -46,6 +49,9 @@
 		half _Glossiness;
 		half _Metallic;
 		fixed4 _Color;
+        float4 _Dog0Color;
+        float4 _Dog1Color;
+        float4 _Dog2Color;
 		
 		static const float _Clip = 0.5;
 
@@ -155,10 +161,10 @@
 			fixed4 c = MainTex * _Color;
 
 			// Lerp the color with the splat colors based on the splat mask channels
-			c.xyz = lerp( c.xyz, float3(1.0,0.5,0.0), splatMask.x );
-			c.xyz = lerp( c.xyz, float3(1.0,0.0,0.0), splatMask.y );
-			c.xyz = lerp( c.xyz, float3(0.0,1.0,0.0), splatMask.z );
-			c.xyz = lerp( c.xyz, float3(0.0,0.0,1.0), splatMask.w );
+			c.xyz = lerp( c.xyz, _Dog0Color, splatMask.x );
+			c.xyz = lerp( c.xyz, _Dog1Color, splatMask.y );
+			c.xyz = lerp( c.xyz, _Dog2Color, splatMask.z );
+			c.xyz = lerp( c.xyz, float3(0.0, 0.0, 1.0), splatMask.w );
 			
 			o.Albedo = c.rgb;
 			o.Normal = tanNormal;
