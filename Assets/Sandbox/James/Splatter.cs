@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 
-public class Splatter : MonoBehaviour, ISplatter {
+public class Splatter : NetworkBehaviour, ISplatter {
 
 	private int splatsX = 1;
 	private int splatsY = 1;
@@ -18,6 +19,11 @@ public class Splatter : MonoBehaviour, ISplatter {
 		channelMask = c;
 	}
 	
+    [Command]
+    public void CmdSplatCommand(Splat newSplat){
+        SplatManagerSystem.instance.AddSplat(newSplat);
+    }
+
     public void Splat(){          
 		RaycastHit hit;
 		if( Physics.Raycast( _emitter.position, Vector3.down, out hit, 100 ) ){
@@ -47,8 +53,12 @@ public class Splatter : MonoBehaviour, ISplatter {
 
 			newSplat.scaleBias = new Vector4(splatscaleX, splatscaleY, splatsBiasX, splatsBiasY );
 
-			SplatManagerSystem.instance.AddSplat (newSplat);
-
+            if (!isServer)
+            {
+                CmdSplatCommand(newSplat);
+            } else {
+                SplatManagerSystem.instance.AddSplat(newSplat);
+            }
 			GameObject.Destroy( newSplatObject ); // make this a pool
 		}
 	}

@@ -19,14 +19,22 @@ public struct SplatReciever {
 
 public class SplatManagerSystem
 {
-
-    internal class SyncListSplats : SyncListStruct<Splat>{}
-
+    // Currently only server is drawing splats. It draws splats from all clients Though!
+    // need a local splat list to draw, and a server splatout, and client splat in list from which to add splats to local list
+    // Client RPC maybe? for loop em.
+    internal class SyncListSplat : SyncListStruct<Splat>{}
+	internal void SplatListChanged(SyncListSplat.Operation op, int itemIndex)
+	{
+	}
     static SplatManagerSystem m_Instance;
 	static public SplatManagerSystem instance {
 		get {
-			if (m_Instance == null)
-				m_Instance = new SplatManagerSystem();
+            if (m_Instance == null)
+            {
+                m_Instance = new SplatManagerSystem();
+                m_Instance.m_Splats = new SyncListSplat();
+                m_Instance.m_Splats.Callback = m_Instance.SplatListChanged;
+            }
 			return m_Instance;
 		}
 	}
@@ -36,8 +44,8 @@ public class SplatManagerSystem
 
 	public Vector4 scores;
 
-
-    internal SyncListSplats m_Splats = new SyncListSplats();
+    [SyncVar]
+    internal SyncListSplat m_Splats = new SyncListSplat();
 	
 	public void AddSplat (Splat splat)
 	{

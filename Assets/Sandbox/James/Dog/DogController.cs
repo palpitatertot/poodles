@@ -20,20 +20,23 @@ public class DogController : NetworkBehaviour
 
 	void Start()
 	{
-		if (isLocalPlayer){
-			_camera = Camera.allCameras[0].transform;
-			_camera.SetParent(transform);
-		}
-		_camera.position = transform.position + new Vector3(0,20,0);
-		_camera.LookAt(transform);
-		_frontPivot = transform.Find("frontPivot");
-		_rearPivot = transform.Find("rearPivot");
-		//_front = _frontPivot.GetComponent<Rigidbody> ();
-		//_rear = _rearPivot.GetComponent<Rigidbody> ();
-		_front = GetComponent<Rigidbody> ();
-		_emitter = GetComponent<Splatter>();
-		_emitter.SetEmitter(transform.Find("rearPivot"));
-        _emitter.SetChannel(_splatChannel);
+        if (isLocalPlayer)
+        {
+            _camera = Camera.allCameras[0].transform;
+            _camera.SetParent(transform);
+            _camera.position = transform.position + new Vector3(0, 20, 0);
+            _camera.LookAt(transform);
+        }
+            _frontPivot = transform.Find("frontPivot");
+            _rearPivot = transform.Find("rearPivot");
+            //_front = _frontPivot.GetComponent<Rigidbody> ();
+            //_rear = _rearPivot.GetComponent<Rigidbody> ();
+            _front = GetComponent<Rigidbody>();
+        if(isLocalPlayer){
+            _emitter = GetComponent<Splatter>();
+            _emitter.SetEmitter(transform.Find("rearPivot"));
+            _emitter.SetChannel(_splatChannel);
+        }
 	}
 
 	void Update()
@@ -56,8 +59,8 @@ public class DogController : NetworkBehaviour
 	}
 
 	void FixedUpdate(){
-		//_front.AddForce (new Vector3 (fx, 0, fz), ForceMode.Impulse);
-		//_rear.AddForce (new Vector3 (rx, 0, rz));
+        //_front.AddForce (new Vector3 (fx, 0, fz), ForceMode.Impulse);
+        //_rear.AddForce (new Vector3 (rx, 0, rz));
 		_front.AddForceAtPosition(transform.forward * fz, _frontPivot.position, ForceMode.Impulse);
 		_front.AddForceAtPosition(transform.right * fx, _frontPivot.position, ForceMode.Impulse);
 		_front.AddForceAtPosition(transform.forward * rz, _rearPivot.position, ForceMode.Impulse);
@@ -66,6 +69,10 @@ public class DogController : NetworkBehaviour
 
 	void LateUpdate()
 	{
+        if(!isLocalPlayer)
+        {
+            return;
+        }
 		_camera.position = transform.position + new Vector3(0,20,0);
 	}
 }
