@@ -6,10 +6,12 @@ public class FPSPlayerController : NetworkBehaviour {
 	public float MouseSpeed;
 	public float CameraPitchClamp;
 
+    private CharacterController _front; 
 	private float _pitch;
 	private Transform _camera;
 	Vector4 _splatChannel = new Vector4(0, 0, 0, 0);
 	private Splatter _emitter;
+    private Vector3 _motion;
 
 	void Start()
 	{
@@ -23,6 +25,7 @@ public class FPSPlayerController : NetworkBehaviour {
 			_emitter = GetComponent<Splatter>();
 			_emitter.SetEmitter(transform);
 			_emitter.SetChannel(_splatChannel);
+            _front = GetComponent<CharacterController>();
         }
 		
 	}
@@ -38,16 +41,21 @@ public class FPSPlayerController : NetworkBehaviour {
 		{
 			_emitter.Splat();
 		}
-
+        _motion = Vector3.zero;
 		var x = Input.GetAxis("Horizontal") * Time.deltaTime * PlayerRunSpeed;
 		var z = Input.GetAxis("Vertical") * Time.deltaTime * PlayerRunSpeed;
 		var rotation = Input.GetAxis("Mouse X") * MouseSpeed;
 		_pitch -= Input.GetAxis("Mouse Y") * MouseSpeed;
 		_pitch = Mathf.Clamp (_pitch, -CameraPitchClamp, CameraPitchClamp);
-		transform.Translate(x, 0, z);
-		transform.Rotate(0, rotation, 0);
-		_camera.localRotation = Quaternion.AngleAxis (_pitch, Vector3.right);
+        //transform.Translate(x, 0, z);
+        transform.Rotate(0, rotation, 0);
+        _motion = new Vector3(x, 0, z);
+        _motion = transform.TransformDirection(_motion);
+        _front.Move(_motion);
+        _camera.localRotation = Quaternion.AngleAxis (_pitch, Vector3.right);
 	}
+
+		
 
     
 }
