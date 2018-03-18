@@ -19,7 +19,10 @@ public struct SplatReciever {
 
 public class SplatManagerSystem
 {
-	static SplatManagerSystem m_Instance;
+
+    internal class SyncListSplats : SyncListStruct<Splat>{}
+
+    static SplatManagerSystem m_Instance;
 	static public SplatManagerSystem instance {
 		get {
 			if (m_Instance == null)
@@ -32,8 +35,9 @@ public class SplatManagerSystem
 	public int splatsY;
 
 	public Vector4 scores;
-	
-	internal SyncListStruct<Splat> m_Splats = new SyncListStruct<Splat>();
+
+
+    internal SyncListSplats m_Splats = new SyncListSplats();
 	
 	public void AddSplat (Splat splat)
 	{
