@@ -26,20 +26,25 @@ public class SplatMakerExample : MonoBehaviour {
 		splatsY = SplatManagerSystem.instance.splatsY;
 
 		if( Input.GetKeyDown (KeyCode.Alpha1) ){
-			channelMask = new Vector4(1,0,0,0);
+			channelMask = SplatColor.YELLOW;
 		}
 		
 		if( Input.GetKeyDown (KeyCode.Alpha2) ){
-			channelMask = new Vector4(0,1,0,0);
+			channelMask = SplatColor.RED;
 		}
 		
 		if( Input.GetKeyDown (KeyCode.Alpha3) ){
-			channelMask = new Vector4(0,0,1,0);
+			channelMask = SplatColor.GREEN;
 		}
 		
 		if( Input.GetKeyDown (KeyCode.Alpha4) ){
-			channelMask = new Vector4(0,0,0,1);
+			channelMask = SplatColor.BLUE;
 		}
+
+        if( Input.GetKeyDown (KeyCode.Alpha5))
+        {
+            channelMask = SplatColor.HUMAN;
+        }
 
             // Cast a ray from the camera to the mouse pointer and draw a splat there.
             // This just picks a rendom scale and bias for a 4x4 splat atlas
