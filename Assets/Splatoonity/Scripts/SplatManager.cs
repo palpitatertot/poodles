@@ -22,18 +22,14 @@ public class SplatManagerSystem
     // Currently only server is drawing splats. It draws splats from all clients Though!
     // need a local splat list to draw, and a server splatout, and client splat in list from which to add splats to local list
     // Client RPC maybe? for loop em.
-    internal class SyncListSplat : SyncListStruct<Splat>{}
-	internal void SplatListChanged(SyncListSplat.Operation op, int itemIndex)
-	{
-	}
     static SplatManagerSystem m_Instance;
 	static public SplatManagerSystem instance {
 		get {
             if (m_Instance == null)
             {
                 m_Instance = new SplatManagerSystem();
-                m_Instance.m_Splats = new SyncListSplat();
-                m_Instance.m_Splats.Callback = m_Instance.SplatListChanged;
+                m_Instance.m_Splats = new List<Splat>();
+                //m_Instance.m_Splats.Callback = m_Instance.SplatListChanged;
             }
 			return m_Instance;
 		}
@@ -44,15 +40,22 @@ public class SplatManagerSystem
 
 	public Vector4 scores;
 
-    [SyncVar]
-    internal SyncListSplat m_Splats = new SyncListSplat();
+    //[SyncVar]
+    internal List<Splat> m_Splats = new List<Splat>();
+    internal List<Splat> m_NetworkSplats = new List<Splat>();
 	
 	public void AddSplat (Splat splat)
-	{
-		//Debug.Log ("Adding Splat");
-		m_Splats.Add (splat);
+    {
+        m_NetworkSplats.Add(splat);
 	}
 
+    //TODO FIND WHY THIS ONLY WORKS ON SERVER
+    [ClientRpc]
+    public void RpcAddSplat(Splat s)
+    {
+        Debug.Log("Adding received Splat");
+        m_Splats.Add(s); 
+    }
 }
 
 public class SplatManager : NetworkBehaviour {
@@ -319,6 +322,15 @@ public class SplatManager : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if(isServer){
+            while (SplatManagerSystem.instance.m_NetworkSplats.Count > 0)
+            {
+                Splat s = SplatManagerSystem.instance.m_NetworkSplats[0];
+                SplatManagerSystem.instance.m_NetworkSplats.RemoveAt(0);
+                //Debug.Log("Adding Splat to RPC");
+                SplatManagerSystem.instance.RpcAddSplat(s);
+            }
+        }
 		PaintSplats ();
 	}
 	
