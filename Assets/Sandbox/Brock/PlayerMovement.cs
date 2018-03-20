@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour {
 	void Start () {
 		
 	}
-	
+
 	// Update is called once per frame
 	void FixedUpdate () {
 		
@@ -20,15 +20,15 @@ public class PlayerMovement : MonoBehaviour {
 
 		if (Input.GetKey("d")) {
 			transform.Translate(Vector3.right * moveSpeed * Time.deltaTime);
-	}
+		}
 		if (Input.GetKey("a")) {
 			transform.Translate(-Vector3.right * moveSpeed * Time.deltaTime);
 		}
 		if (Input.GetKey("w")) {
-			transform.Translate (-Vector3.up * moveSpeed * Time.deltaTime);
+			transform.Translate (Vector3.forward * moveSpeed * Time.deltaTime);
 		}
 		if (Input.GetKey("s")) {
-			transform.Translate (Vector3.up * moveSpeed * Time.deltaTime);
+			transform.Translate (-Vector3.forward * moveSpeed * Time.deltaTime);
 		}
 		if (Input.GetKeyDown (KeyCode.Space)) {
 			
