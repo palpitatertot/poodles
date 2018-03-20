@@ -7,15 +7,30 @@ public class PlayerMovement : MonoBehaviour {
 	public Rigidbody rb;
 	public float moveSpeed;
 	public float turnSpeed;
-
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 		
 	}
 
 	// Update is called once per frame
 	void FixedUpdate () {
 		
+
+
+
+
+
+		if (Input.GetKeyDown (KeyCode.Space)) {
+
+
+
+
+
+
+
+		}
+
 
 
 		if (Input.GetKey("d")) {
@@ -30,15 +45,10 @@ public class PlayerMovement : MonoBehaviour {
 		if (Input.GetKey("s")) {
 			transform.Translate (-Vector3.forward * moveSpeed * Time.deltaTime);
 		}
-		if (Input.GetKeyDown (KeyCode.Space)) {
-			
-
-		}
-
-		if(Input.GetKey(KeyCode.LeftArrow))
+		if (Input.GetKey(KeyCode.LeftArrow))
 			transform.Rotate(0, -turnSpeed * Time.deltaTime, 0, Space.World);
 
-		if(Input.GetKey(KeyCode.RightArrow))
+		if (Input.GetKey(KeyCode.RightArrow))
 			transform.Rotate(0, turnSpeed * Time.deltaTime, 0, Space.World);
 
 
@@ -46,5 +56,10 @@ public class PlayerMovement : MonoBehaviour {
 
 
 
-}
-			}
+	}
+
+
+
+
+	}
+

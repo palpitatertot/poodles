@@ -1,32 +1,17 @@
 fileFormatVersion: 2
-guid: ed766d322ec8e4ea6b3e45b828371505
+guid: c792207dc9c944abdb1b78e72d93bd12
 timeCreated: 1521561677
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    100002: pCube1
-    100004: pCube2
-    100006: pCube3
-    100008: transform1
-    100010: transform2
     400000: //RootNode
-    400002: pCube1
-    400004: pCube2
-    400006: pCube3
-    400008: transform1
-    400010: transform2
-    2100000: blinn2
-    2100002: blinn1
-    2100004: lambert1
-    2100006: SKIN
-    2100008: wood
-    2100010: mopTentacles
-    2100012: red
-    2300000: pCube3
-    3300000: pCube3
-    4300000: pCube3
+    2100000: wood
+    2100002: mopTentacles
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: pCube4
     9500000: //RootNode
   externalObjects: {}
   materials:
