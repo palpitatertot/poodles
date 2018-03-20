@@ -22,6 +22,12 @@ public class Splatter : NetworkBehaviour, ISplatter {
     [Command]
     public void CmdSplatCommand(Splat newSplat){
         SplatManagerSystem.instance.AddSplat(newSplat);
+        RpcAddSplat(newSplat);
+    }
+    [ClientRpc]
+    public void RpcAddSplat(Splat s)
+    {
+        SplatManagerSystem.instance.AddSplat(s);    
     }
 
     public void Splat(){          
@@ -57,7 +63,7 @@ public class Splatter : NetworkBehaviour, ISplatter {
             {
                 CmdSplatCommand(newSplat);
             } else {
-                SplatManagerSystem.instance.AddSplat(newSplat);
+                RpcAddSplat(newSplat);
             }
 			GameObject.Destroy( newSplatObject ); // make this a pool
 		}
