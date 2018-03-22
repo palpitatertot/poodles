@@ -8,6 +8,7 @@ public class Splatter : NetworkBehaviour, ISplatter {
 	private int splatsX = 1;
 	private int splatsY = 1;
 	private Vector4 channelMask = new Vector4(0,0,0,1);
+    private Vector4 color = new Vector4(0, 0, 0, 0);
 	private Transform _emitter;
 	public float splatScale = 1.0f;
 	
@@ -15,10 +16,33 @@ public class Splatter : NetworkBehaviour, ISplatter {
 		_emitter = t;
 	}
 
-	public void SetChannel(Vector3 c){
+	public void SetChannel(Vector4 c){
 		channelMask = c;
 	}
-	
+
+    public void SetColor(Vector4 c){
+        color = c;
+    }
+
+    public void RegisterSplatter(){
+        if(isServer){
+            RpcRegisterSplatter(channelMask, color);
+        } else {
+            CmdRegisterSplatter(channelMask, color);
+        }
+    }
+
+    [Command]
+    public void CmdRegisterSplatter(Vector4 channelMask, Vector4 color){
+        SplatManagerSystem.instance.SetColor(channelMask, color);
+        RpcRegisterSplatter(channelMask, color);
+    }
+
+    [ClientRpc]
+    public void RpcRegisterSplatter(Vector4 channelMask, Vector4 color) {
+        SplatManagerSystem.instance.SetColor(channelMask, color);
+    }
+
     [Command]
     public void CmdSplatCommand(Splat newSplat){
         SplatManagerSystem.instance.AddSplat(newSplat);

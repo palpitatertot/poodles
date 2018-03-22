@@ -19,12 +19,14 @@ public struct SplatReciever {
 
 public class SplatManagerSystem
 {
+    static Renderer render;
     static SplatManagerSystem m_Instance;
 	static public SplatManagerSystem instance {
 		get {
             if (m_Instance == null)
             {
                 m_Instance = new SplatManagerSystem();
+
                 //m_Instance.m_Splats = new List<Splat>();
             }
 			return m_Instance;
@@ -44,18 +46,27 @@ public class SplatManagerSystem
         m_Splats.Add(splat);
 	}
 
-    //TODO FIND WHY THIS ONLY WORKS ON SERVER
-    //TODO Put this in Splatter.cs
-    //[ClientRpc]
-    //public void RpcAddSplat(Splat s)
-    //{
-    //    Debug.Log("Adding received Splat");
-    //    m_Splats.Add(s); 
-    //}
+    public void SetColor(Vector4 channelMask, Vector4 color)
+    {
+       /* if (channelMask == SplatChannel.DOG0)
+        {
+            SplatManagerSystem.render.material.SetVector("_Dog0Color", color);
+        }
+        else if (channelMask == SplatChannel.DOG1)
+        {
+            SplatManagerSystem.render.material.SetVector("_Dog1Color", color);
+        }
+        if (channelMask == SplatChannel.DOG2)
+        {
+            SplatManagerSystem.render.material.SetVector("_Dog2Color", color);
+        } */
+    }
+
 }
 
 public class SplatManager : NetworkBehaviour {
 
+    Renderer render;
 	public int sizeX;
 	public int sizeY;
 
@@ -315,19 +326,11 @@ public class SplatManager : NetworkBehaviour {
 			yield return new WaitForSeconds (1.0f);
 		}
 	}
+
+
 	
 	// Update is called once per frame
 	void Update () {
-        // Maybe put this in Splatter.cs, where each splat is a command, then the server RPCs the addsplat here
-        //if(isServer){
-        //   while (SplatManagerSystem.instance.m_NetworkSplats.Count > 0)
-        //    {
-        //        Splat s = SplatManagerSystem.instance.m_NetworkSplats[0];
-        //        SplatManagerSystem.instance.m_NetworkSplats.RemoveAt(0);
-        //        //Debug.Log("Adding Splat to RPC");
-        //        SplatManagerSystem.instance.RpcAddSplat(s);
-        //    }
-        //}
 		PaintSplats ();
 	}
 	

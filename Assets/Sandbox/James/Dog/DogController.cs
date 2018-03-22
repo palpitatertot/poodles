@@ -15,7 +15,7 @@ public class DogController : NetworkBehaviour
 	private Rigidbody _front;
     private Rigidbody _rear;
 	private float fx, fz, rx, rz, y;
-    Vector4 _splatChannel = new Vector4(1, 0, 0, 0); // TODO MAKE ENUM
+    Vector4 _splatChannel = new Vector4(1, 0, 0, 0);
     private Splatter _emitter;
 
 	void Start()
@@ -38,6 +38,8 @@ public class DogController : NetworkBehaviour
             _emitter.SetChannel(_splatChannel);
         }
 	}
+
+
 
 	void Update()
 	{
