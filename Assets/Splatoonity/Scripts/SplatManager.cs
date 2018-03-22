@@ -19,7 +19,7 @@ public struct SplatReciever {
 
 public class SplatManagerSystem
 {
-    static Renderer render;
+    static Renderer renderer;
     static SplatManagerSystem m_Instance;
 	static public SplatManagerSystem instance {
 		get {
@@ -332,6 +332,8 @@ public class SplatManager : NetworkBehaviour {
 	// Update is called once per frame
 	void Update () {
 		PaintSplats ();
+
+        
 	}
 	
 }
