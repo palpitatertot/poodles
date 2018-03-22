@@ -19,7 +19,7 @@ public struct SplatReciever {
 
 public class SplatManagerSystem
 {
-    static Renderer renderer;
+    static Renderer render;
     static SplatManagerSystem m_Instance;
 	static public SplatManagerSystem instance {
 		get {
