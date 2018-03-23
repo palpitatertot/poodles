@@ -11,10 +11,18 @@ public class Splatter : NetworkBehaviour, ISplatter {
     private Vector4 color = new Vector4(0, 0, 0, 0);
 	private Transform _emitter;
 	public float splatScale = 1.0f;
+    private List<Vector4> colors = new List<Vector4>();
 	
 	public void SetEmitter(Transform t){
 		_emitter = t;
 	}
+
+    public void SetColors(List<Vector4> c) {
+        foreach (var col in c)
+        {
+            colors.Add(col);
+        }
+    }
 
 	public void SetChannel(Vector4 c){
 		channelMask = c;
@@ -26,21 +34,21 @@ public class Splatter : NetworkBehaviour, ISplatter {
 
     public void RegisterSplatter(){
         if(isServer){
-            RpcRegisterSplatter(channelMask, color);
+            //RpcRegisterSplatter(channelMask, color);
         } else {
-            CmdRegisterSplatter(channelMask, color);
+            //CmdRegisterSplatter(channelMask, color);
         }
     }
 
     [Command]
     public void CmdRegisterSplatter(Vector4 channelMask, Vector4 color){
-        SplatManagerSystem.instance.SetColor(channelMask, color);
-        RpcRegisterSplatter(channelMask, color);
+    //    SplatManagerSystem.instance.SetColor(channelMask, color);
+    //    RpcRegisterSplatter(channelMask, color);
     }
 
     [ClientRpc]
     public void RpcRegisterSplatter(Vector4 channelMask, Vector4 color) {
-        SplatManagerSystem.instance.SetColor(channelMask, color);
+  //      SplatManagerSystem.instance.SetColor(channelMask, color);
     }
 
     [Command]
@@ -52,6 +60,17 @@ public class Splatter : NetworkBehaviour, ISplatter {
     public void RpcAddSplat(Splat s)
     {
         SplatManagerSystem.instance.AddSplat(s);    
+    }
+
+
+    void Start(){
+        int i = 0;
+        foreach (Vector4 c in colors)
+        {
+            SplatManagerSystem.instance.SetColor(i, c);
+            i++;
+        }
+        Debug.Log("Colors Away!");
     }
 
     public void Splat(){          

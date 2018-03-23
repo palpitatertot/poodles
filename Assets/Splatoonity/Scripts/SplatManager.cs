@@ -46,17 +46,17 @@ public class SplatManagerSystem
         m_Splats.Add(splat);
 	}
 
-    public void SetColor(Vector4 channelMask, Vector4 color)
+    public void SetColor(int channelMask, Vector4 color)
     {
-        if (channelMask == SplatChannel.DOG0)
+        if (channelMask == 0)
         {
             SplatManagerSystem.render.material.SetVector("_Dog0Color", color);
         }
-        else if (channelMask == SplatChannel.DOG1)
+        else if (channelMask == 1)
         {
             SplatManagerSystem.render.material.SetVector("_Dog1Color", color);
         }
-        if (channelMask == SplatChannel.DOG2)
+        if (channelMask == 2)
         {
             SplatManagerSystem.render.material.SetVector("_Dog2Color", color);
         } 

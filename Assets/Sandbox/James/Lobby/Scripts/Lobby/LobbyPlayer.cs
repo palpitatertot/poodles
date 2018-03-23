@@ -14,7 +14,7 @@ namespace Prototype.NetworkLobby
         static Vector4[] Colors = new Vector4[] { SplatColor.MAGENTA, SplatColor.INDIGO, SplatColor.CYAN, SplatColor.NEONYELLOW, SplatColor.NEONORANGE, SplatColor.NEONGREEN };
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();
-
+        public int connectionId;
 		public Sprite dogTeamImage;
 		public Sprite manTeamImage;
 		public Button teamButton;

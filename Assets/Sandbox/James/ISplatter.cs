@@ -7,4 +7,5 @@ public interface ISplatter {
     void SetChannel(Vector4 c);
     void SetColor(Vector4 c);
     void RegisterSplatter();
+    void SetColors(List<Vector4> colors);
 } 

@@ -12,6 +12,9 @@ namespace Prototype.NetworkLobby
 {
     public class LobbyManager : NetworkLobbyManager 
     {
+
+        private int dogsSpawned = 0;
+
         private Dictionary<int, Teams.Team> currentPlayers;
         static short MsgKicked = MsgType.Highest + 1;
 
@@ -45,6 +48,7 @@ namespace Prototype.NetworkLobby
         //of players, so that even client know how many player there is.
         [HideInInspector]
         public int _playerNumber = 0;
+        //private int _totalPlayersLoaded = 0;
 
         //used to disconnect a client properly when exiting the matchmaker
         [HideInInspector]
@@ -70,6 +74,17 @@ namespace Prototype.NetworkLobby
 
             SetServerInfo("Offline", "None");
         }
+
+        /*public override void OnLobbyServerSceneChanged(string sceneName)
+        {   
+            base.OnLobbyServerSceneChanged(sceneName);
+            _totalPlayersLoaded++;
+            while (_totalPlayersLoaded != _playerNumber){
+                ;
+            }
+            Debug.Log("all loaded");
+            playerPrefab.GetComponent<Splatter>().RegisterSplatter();
+        }*/
 
         public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
@@ -118,6 +133,14 @@ namespace Prototype.NetworkLobby
                 //backDelegate = StopGameClbk;
                 topPanel.isInGame = true;
                 topPanel.ToggleVisibility(false);
+
+               /* _totalPlayersLoaded++;
+                while (_totalPlayersLoaded != _playerNumber)
+                {
+                    ;
+                }
+                Debug.Log("all loaded");
+                playerPrefab.GetComponent<Splatter>().RegisterSplatter();*/
             }
         }
 
@@ -288,6 +311,7 @@ namespace Prototype.NetworkLobby
             Debug.Log(obj);
         
             LobbyPlayer newPlayer = obj.GetComponent<LobbyPlayer>();
+            newPlayer.connectionId = conn.connectionId;
             newPlayer.ToggleJoinButton(numPlayers + 1 >= minPlayers);
 
 
@@ -320,6 +344,34 @@ namespace Prototype.NetworkLobby
             GameObject playerPrefab = (GameObject)GameObject.Instantiate(spawnPrefabs[team], 
                 startPositions[conn.connectionId].position, 
                 Quaternion.identity);
+
+            Splatter s = playerPrefab.GetComponent<Splatter>();
+            List<Vector4> cList = new List<Vector4>();
+            Vector4 channel;
+            // set colors and channel mask (mask is implied by order)
+            int i = 0;
+            foreach (LobbyPlayer p in lobbySlots)
+            {
+                if (p == null) { Debug.Log("no p"); }
+                if(p.playerTeam == Teams.Team.DOGS)
+                {
+                    cList.Add(p.playerColor);
+                    if(p.connectionId == conn.connectionId){
+                        if(i==0){
+                            s.SetChannel(SplatChannel.DOG0);
+                        } else if (i==1){
+                            s.SetChannel(SplatChannel.DOG1);
+                        } else if (i==2){
+                            s.SetChannel(SplatChannel.DOG2);
+                        }
+
+                    }
+                    i++;
+                }
+
+            }
+            s.SetColors(cList);
+
             
             Debug.Log("Team " + 1 + " Prefab " + playerPrefab + " connId " + conn.connectionId);
             return playerPrefab;
