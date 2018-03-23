@@ -57,6 +57,7 @@ namespace Prototype.NetworkLobby
         {   
             currentPlayers = new Dictionary<int, Teams.Team>();
             lobbyPlayers = new Dictionary<int, LobbyPlayer>();
+
             s_Singleton = this;
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = mainMenuPanel;
@@ -348,7 +349,10 @@ namespace Prototype.NetworkLobby
                 }
             }
             s.SetColors(DogColorList);
-            
+            foreach (var d in DogColorList)
+            {
+                Debug.Log(d);
+            }
             Debug.Log("Team " + 1 + " Prefab " + playerPrefab + " connId " + conn.connectionId);
             return playerPrefab;
         }

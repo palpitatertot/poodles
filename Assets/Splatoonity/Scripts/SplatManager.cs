@@ -43,21 +43,6 @@ public class SplatManagerSystem
         m_Splats.Add(splat);
 	}
 
-    public static void SetColor(int channelMask, Vector4 color)
-    {
-        if (channelMask == 0)
-        {
-            //SplatManager.render.material.SetVector("_Dog0Color", color);
-        }
-        else if (channelMask == 1)
-        {
-            //SplatManager.render.material.SetVector("_Dog1Color", color);
-        }
-        if (channelMask == 2)
-        {
-            //SplatManager.render.material.SetVector("_Dog2Color", color);
-        } 
-    }
 }
 
 public class SplatManager : NetworkBehaviour {
@@ -117,13 +102,6 @@ public class SplatManager : NetworkBehaviour {
 		Shader.SetGlobalTexture ("_WorldBinormalTex", worldBinormalTex);
 		Shader.SetGlobalVector ("_SplatTexSize", new Vector4 (sizeX, sizeY, 0, 0));
 
-        Renderer envRenderer = this.gameObject.GetComponent<Renderer>();
-        int i = 0;
-        foreach (Vector4 color in SplatManagerSystem.instance.Colors)
-        {
-            envRenderer.material.SetVector("_Dog"+i+"Color", color);
-        }
-
 		// Textures for tallying scores
 		RT256 = new RenderTexture (256, 256, 0, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear);
 		RT256.autoGenerateMips = true;
@@ -152,6 +130,14 @@ public class SplatManager : NetworkBehaviour {
 		RenderTextures ();
 		BleedTextures ();
 		StartCoroutine( UpdateScores() );
+        Renderer envRenderer = this.gameObject.GetComponent<Renderer>();
+        int i = 0;
+        foreach (Vector4 color in SplatManagerSystem.instance.Colors)
+        {
+            Debug.Log("SETTING RENDERER: " + i + " " + color);
+            envRenderer.material.SetVector("_Dog" + i + "Color", color);
+            i++;
+        }
     }
     
 	// Render textures with a command buffer.
