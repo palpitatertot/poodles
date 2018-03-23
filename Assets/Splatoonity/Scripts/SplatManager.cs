@@ -19,8 +19,8 @@ public struct SplatReciever {
 
 public class SplatManagerSystem
 {
-    static Renderer render;
     static SplatManagerSystem m_Instance;
+    public List<Vector4> Colors = new List<Vector4>();
 	static public SplatManagerSystem instance {
 		get {
             if (m_Instance == null)
@@ -46,19 +46,19 @@ public class SplatManagerSystem
         m_Splats.Add(splat);
 	}
 
-    public void SetColor(int channelMask, Vector4 color)
+    public static void SetColor(int channelMask, Vector4 color)
     {
         if (channelMask == 0)
         {
-            SplatManagerSystem.render.material.SetVector("_Dog0Color", color);
+            //SplatManager.render.material.SetVector("_Dog0Color", color);
         }
         else if (channelMask == 1)
         {
-            SplatManagerSystem.render.material.SetVector("_Dog1Color", color);
+            //SplatManager.render.material.SetVector("_Dog1Color", color);
         }
         if (channelMask == 2)
         {
-            SplatManagerSystem.render.material.SetVector("_Dog2Color", color);
+            //SplatManager.render.material.SetVector("_Dog2Color", color);
         } 
     }
 
@@ -66,8 +66,9 @@ public class SplatManagerSystem
 
 public class SplatManager : NetworkBehaviour {
 
-    Renderer render;
-	public int sizeX;
+    public Renderer render;
+	
+    public int sizeX;
 	public int sizeY;
 
 	public Texture2D splatTexture;
@@ -120,6 +121,12 @@ public class SplatManager : NetworkBehaviour {
 		Shader.SetGlobalTexture ("_WorldBinormalTex", worldBinormalTex);
 		Shader.SetGlobalVector ("_SplatTexSize", new Vector4 (sizeX, sizeY, 0, 0));
 
+        Renderer envRenderer = this.gameObject.GetComponent<Renderer>();
+        int i = 0;
+        foreach (Vector4 color in SplatManagerSystem.instance.Colors)
+        {
+            envRenderer.material.SetVector("_Dog"+i+"Color", color);
+        }
 
 		// Textures for tallying scores
 		RT256 = new RenderTexture (256, 256, 0, RenderTextureFormat.ARGBFloat, RenderTextureReadWrite.Linear);

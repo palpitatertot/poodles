@@ -64,13 +64,7 @@ public class Splatter : NetworkBehaviour, ISplatter {
 
 
     void Start(){
-        int i = 0;
-        foreach (Vector4 c in colors)
-        {
-            SplatManagerSystem.instance.SetColor(i, c);
-            i++;
-        }
-        Debug.Log("Colors Away!");
+        SplatManagerSystem.instance.Colors = colors;
     }
 
     public void Splat(){          

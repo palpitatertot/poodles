@@ -16,6 +16,8 @@ namespace Prototype.NetworkLobby
         private int dogsSpawned = 0;
 
         private Dictionary<int, Teams.Team> currentPlayers;
+        private Dictionary<int, LobbyPlayer> lobbyPlayers;
+
         static short MsgKicked = MsgType.Highest + 1;
 
         static public LobbyManager s_Singleton;
@@ -62,7 +64,8 @@ namespace Prototype.NetworkLobby
 
         void Start()
         {   
-            currentPlayers = new Dictionary<int, Teams.Team>(); 
+            currentPlayers = new Dictionary<int, Teams.Team>();
+            lobbyPlayers = new Dictionary<int, LobbyPlayer>();
             s_Singleton = this;
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = mainMenuPanel;
@@ -70,12 +73,13 @@ namespace Prototype.NetworkLobby
             backButton.gameObject.SetActive(false);
             GetComponent<Canvas>().enabled = true;
 
+
             DontDestroyOnLoad(gameObject);
 
             SetServerInfo("Offline", "None");
         }
 
-        /*public override void OnLobbyServerSceneChanged(string sceneName)
+		/*public override void OnLobbyServerSceneChanged(string sceneName)
         {   
             base.OnLobbyServerSceneChanged(sceneName);
             _totalPlayersLoaded++;
@@ -86,7 +90,14 @@ namespace Prototype.NetworkLobby
             playerPrefab.GetComponent<Splatter>().RegisterSplatter();
         }*/
 
-        public override void OnLobbyClientSceneChanged(NetworkConnection conn)
+
+		public override void OnServerDisconnect(NetworkConnection conn)
+		{
+            lobbyPlayers.Remove(conn.connectionId);
+            base.OnServerDisconnect(conn);
+		}
+
+		public override void OnLobbyClientSceneChanged(NetworkConnection conn)
         {
             if (SceneManager.GetSceneAt(0).name == lobbyScene)
             {
@@ -306,6 +317,7 @@ namespace Prototype.NetworkLobby
             {
                 currentPlayers.Add(conn.connectionId, Teams.Team.DOGS);
             }
+
             GameObject obj = Instantiate(lobbyPlayerPrefab.gameObject) as GameObject;
 
             Debug.Log(obj);
@@ -314,6 +326,7 @@ namespace Prototype.NetworkLobby
             newPlayer.connectionId = conn.connectionId;
             newPlayer.ToggleJoinButton(numPlayers + 1 >= minPlayers);
 
+            lobbyPlayers.Add(conn.connectionId, newPlayer);
 
             for (int i = 0; i < lobbySlots.Length; ++i)
             {
@@ -346,16 +359,16 @@ namespace Prototype.NetworkLobby
                 Quaternion.identity);
 
             Splatter s = playerPrefab.GetComponent<Splatter>();
-            List<Vector4> cList = new List<Vector4>();
-            Vector4 channel;
+
+
             // set colors and channel mask (mask is implied by order)
             int i = 0;
-            foreach (LobbyPlayer p in lobbySlots)
+            List<Vector4> DogColorList = new List<Vector4>();
+            foreach (LobbyPlayer p in lobbyPlayers.Values)
             {
-                if (p == null) { Debug.Log("no p"); }
                 if(p.playerTeam == Teams.Team.DOGS)
                 {
-                    cList.Add(p.playerColor);
+                    DogColorList.Add(p.playerColor);
                     if(p.connectionId == conn.connectionId){
                         if(i==0){
                             s.SetChannel(SplatChannel.DOG0);
@@ -370,7 +383,7 @@ namespace Prototype.NetworkLobby
                 }
 
             }
-            s.SetColors(cList);
+            s.SetColors(DogColorList);
 
             
             Debug.Log("Team " + 1 + " Prefab " + playerPrefab + " connId " + conn.connectionId);
