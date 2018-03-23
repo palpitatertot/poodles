@@ -5,12 +5,12 @@ using UnityEngine.Networking;
 
 public class Splatter : NetworkBehaviour, ISplatter {
 
+	public float splatScale = 1.0f;
 	private int splatsX = 1;
 	private int splatsY = 1;
+	private Transform _emitter;
 	private Vector4 channelMask = new Vector4(0,0,0,1);
     private Vector4 color = new Vector4(0, 0, 0, 0);
-	private Transform _emitter;
-	public float splatScale = 1.0f;
     private List<Vector4> colors = new List<Vector4>();
 	
 	public void SetEmitter(Transform t){
@@ -62,7 +62,6 @@ public class Splatter : NetworkBehaviour, ISplatter {
         SplatManagerSystem.instance.AddSplat(s);    
     }
 
-
     void Start(){
         SplatManagerSystem.instance.Colors = colors;
     }
@@ -105,5 +104,4 @@ public class Splatter : NetworkBehaviour, ISplatter {
 			GameObject.Destroy( newSplatObject ); // make this a pool
 		}
 	}
-
 }

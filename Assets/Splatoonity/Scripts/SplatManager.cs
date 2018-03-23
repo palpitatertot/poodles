@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Networking;
 
-
 //all the stuff directly related in handling/generating splats
 
 public struct Splat {
@@ -26,8 +25,6 @@ public class SplatManagerSystem
             if (m_Instance == null)
             {
                 m_Instance = new SplatManagerSystem();
-
-                //m_Instance.m_Splats = new List<Splat>();
             }
 			return m_Instance;
 		}
@@ -61,7 +58,6 @@ public class SplatManagerSystem
             //SplatManager.render.material.SetVector("_Dog2Color", color);
         } 
     }
-
 }
 
 public class SplatManager : NetworkBehaviour {
@@ -136,7 +132,6 @@ public class SplatManager : NetworkBehaviour {
 		RT4 = new RenderTexture (4, 4, 0, RenderTextureFormat.ARGB32, RenderTextureReadWrite.Linear);
 		RT4.Create ();
 		Tex4 = new Texture2D (4, 4, TextureFormat.ARGB32, false);
-
 		
 		GameObject rtCameraObject = new GameObject ();
 		rtCameraObject.name = "rtCameraObject";
@@ -157,29 +152,8 @@ public class SplatManager : NetworkBehaviour {
 		RenderTextures ();
 		BleedTextures ();
 		StartCoroutine( UpdateScores() );
-
     }
-
-	/*
-	// Render textures using shader replacement.
-	// This will render all objects in the scene though.
-	// You could cull based on layers though.
-	void RenderTextures() {
-
-		Material worldPosMaterial = new Material (Shader.Find ("Splatoonity/WorldPosUnwrap"));
-		Material worldNormalMaterial = new Material (Shader.Find ("Splatoonity/WorldNormalUnwrap"));
-
-		rtCamera.targetTexture = worldPosTex;
-		rtCamera.RenderWithShader (Shader.Find ("Splatoonity/WorldPosUnwrap"), null);
-
-		rtCamera.targetTexture = worldTangentTex;
-		rtCamera.RenderWithShader (Shader.Find ("Splatoonity/WorldTangentUnwrap"), null);
-
-		rtCamera.targetTexture = worldBinormalTex;
-		rtCamera.RenderWithShader (Shader.Find ("Splatoonity/WorldBinormalUnwrap"), null);
-	}
-	*/
-
+    
 	// Render textures with a command buffer.
 	// This is more flexible as you can explicitly add more objects to render without worying about layers.
 	// You could also have multiple instances for chunks of a scene.
@@ -215,7 +189,6 @@ public class SplatManager : NetworkBehaviour {
 		rtCamera.Render ();
 	}
 
-
 	void BleedTextures() {
 		Graphics.Blit (Texture2D.blackTexture, splatTex, splatBlitMaterial, 1);		
 		Graphics.Blit (Texture2D.blackTexture, splatTexAlt, splatBlitMaterial, 1);
@@ -230,7 +203,6 @@ public class SplatManager : NetworkBehaviour {
 		worldPosTexTemp.Release();
 		worldPosTexTemp = null;
 	}
-
 
 	// Blit the splats
 	// This is similar to how a deferred decal would work
@@ -334,13 +306,8 @@ public class SplatManager : NetworkBehaviour {
 		}
 	}
 
-
-	
 	// Update is called once per frame
 	void Update () {
-		PaintSplats ();
-
-        
-	}
-	
+		PaintSplats ();        
+	}	
 }

@@ -28,9 +28,7 @@ public class DogController : NetworkBehaviour
             _camera.LookAt(transform);
         }
             _frontPivot = transform.Find("frontPivot");
-            _rearPivot = transform.Find("rearPivot");
-            //_front = _frontPivot.GetComponent<Rigidbody> ();
-            //_rear = _rearPivot.GetComponent<Rigidbody> ();
+            _rearPivot = transform.Find("rearPivot");            
             _front = GetComponent<Rigidbody>();
         if(isLocalPlayer){
             _emitter = GetComponent<Splatter>();
@@ -38,8 +36,6 @@ public class DogController : NetworkBehaviour
             _emitter.SetChannel(_splatChannel);
         }
 	}
-
-
 
 	void Update()
 	{
@@ -52,17 +48,14 @@ public class DogController : NetworkBehaviour
 		fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
 		rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
 		rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
-		//Debug.Log ("fx = " + fx + "fz = " + fz + "rx =" + rx + "rz =" + rz);
+
 		if (Input.GetKey(KeyCode.Space))
 		{
 			_emitter.Splat();
 		}
-
 	}
 
-	void FixedUpdate(){
-        //_front.AddForce (new Vector3 (fx, 0, fz), ForceMode.Impulse);
-        //_rear.AddForce (new Vector3 (rx, 0, rz));
+	void FixedUpdate(){        
 		_front.AddForceAtPosition(transform.forward * fz, _frontPivot.position, ForceMode.Impulse);
 		_front.AddForceAtPosition(transform.right * fx, _frontPivot.position, ForceMode.Impulse);
 		_front.AddForceAtPosition(transform.forward * rz, _rearPivot.position, ForceMode.Impulse);

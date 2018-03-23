@@ -12,45 +12,36 @@ namespace Prototype.NetworkLobby
 {
     public class LobbyManager : NetworkLobbyManager 
     {
+        private Dictionary<int, LobbyPlayer> lobbyPlayers;
+        private Dictionary<int, Teams.Team> currentPlayers;
 
         private int dogsSpawned = 0;
-
-        private Dictionary<int, Teams.Team> currentPlayers;
-        private Dictionary<int, LobbyPlayer> lobbyPlayers;
 
         static short MsgKicked = MsgType.Highest + 1;
 
         static public LobbyManager s_Singleton;
-
 
         [Header("Unity UI Lobby")]
         [Tooltip("Time in second between all players ready & match start")]
         public float prematchCountdown = 5.0f;
 
         [Space]
-        [Header("UI Reference")]
-        public LobbyTopPanel topPanel;
-
-        public RectTransform mainMenuPanel;
-        public RectTransform lobbyPanel;
-
-        public LobbyInfoPanel infoPanel;
-        public LobbyCountdownPanel countdownPanel;
-        public GameObject addPlayerButton;
-
+        [Header("UI Reference")]    
         protected RectTransform currentPanel;
-
         public Button backButton;
-
-        public Text statusInfo;
+        public GameObject addPlayerButton;
+        public LobbyCountdownPanel countdownPanel;
+        public LobbyInfoPanel infoPanel;
+        public LobbyTopPanel topPanel;
+        public RectTransform lobbyPanel;
+        public RectTransform mainMenuPanel;
         public Text hostInfo;
-
+        public Text statusInfo;
 
         //Client numPlayers from NetworkManager is always 0, so we count (throught connect/destroy in LobbyPlayer) the number
         //of players, so that even client know how many player there is.
         [HideInInspector]
-        public int _playerNumber = 0;
-        //private int _totalPlayersLoaded = 0;
+        public int _playerNumber = 0;     
 
         //used to disconnect a client properly when exiting the matchmaker
         [HideInInspector]
@@ -73,24 +64,11 @@ namespace Prototype.NetworkLobby
             backButton.gameObject.SetActive(false);
             GetComponent<Canvas>().enabled = true;
 
-
             DontDestroyOnLoad(gameObject);
 
             SetServerInfo("Offline", "None");
         }
-
-		/*public override void OnLobbyServerSceneChanged(string sceneName)
-        {   
-            base.OnLobbyServerSceneChanged(sceneName);
-            _totalPlayersLoaded++;
-            while (_totalPlayersLoaded != _playerNumber){
-                ;
-            }
-            Debug.Log("all loaded");
-            playerPrefab.GetComponent<Splatter>().RegisterSplatter();
-        }*/
-
-
+        
 		public override void OnServerDisconnect(NetworkConnection conn)
 		{
             lobbyPlayers.Remove(conn.connectionId);
@@ -140,18 +118,9 @@ namespace Prototype.NetworkLobby
                 ChangeTo(null);
 
                 Destroy(GameObject.Find("MainMenuUI(Clone)"));
-
-                //backDelegate = StopGameClbk;
+        
                 topPanel.isInGame = true;
                 topPanel.ToggleVisibility(false);
-
-               /* _totalPlayersLoaded++;
-                while (_totalPlayersLoaded != _playerNumber)
-                {
-                    ;
-                }
-                Debug.Log("all loaded");
-                playerPrefab.GetComponent<Splatter>().RegisterSplatter();*/
             }
         }
 
@@ -193,9 +162,10 @@ namespace Prototype.NetworkLobby
             hostInfo.text = host;
         }
 
-
         public delegate void BackButtonDelegate();
+
         public BackButtonDelegate backDelegate;
+
         public void GoBackButton()
         {
             backDelegate();
@@ -258,9 +228,6 @@ namespace Prototype.NetworkLobby
         {
             conn.Send(MsgKicked, new KickMsg());
         }
-
-
-
 
         public void KickedMessageHandler(NetworkMessage netMsg)
         {
@@ -360,7 +327,6 @@ namespace Prototype.NetworkLobby
 
             Splatter s = playerPrefab.GetComponent<Splatter>();
 
-
             // set colors and channel mask (mask is implied by order)
             int i = 0;
             List<Vector4> DogColorList = new List<Vector4>();
@@ -377,14 +343,11 @@ namespace Prototype.NetworkLobby
                         } else if (i==2){
                             s.SetChannel(SplatChannel.DOG2);
                         }
-
                     }
                     i++;
                 }
-
             }
             s.SetColors(DogColorList);
-
             
             Debug.Log("Team " + 1 + " Prefab " + playerPrefab + " connId " + conn.connectionId);
             return playerPrefab;
@@ -499,7 +462,6 @@ namespace Prototype.NetworkLobby
                 SetServerInfo("Client", networkAddress);
             }
         }
-
 
         public override void OnClientDisconnect(NetworkConnection conn)
         {
