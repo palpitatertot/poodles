@@ -20,6 +20,8 @@ public class SplatManagerSystem
 {
     static SplatManagerSystem m_Instance;
     public List<Vector4> Colors = new List<Vector4>();
+    internal Renderer m_envRenderer;
+
 	static public SplatManagerSystem instance {
 		get {
             if (m_Instance == null)
@@ -37,7 +39,8 @@ public class SplatManagerSystem
 
     internal List<Splat> m_Splats = new List<Splat>();
     internal List<Splat> m_NetworkSplats = new List<Splat>();
-	
+
+
 	public void AddSplat (Splat splat)
     {
         m_Splats.Add(splat);
@@ -46,9 +49,7 @@ public class SplatManagerSystem
 }
 
 public class SplatManager : NetworkBehaviour {
-
-    public Renderer render;
-	
+    
     public int sizeX;
 	public int sizeY;
 
@@ -75,9 +76,21 @@ public class SplatManager : NetworkBehaviour {
 	public RenderTexture RT4;
 	public Texture2D Tex4;
 
+    public static void SendColorsToRenderer()
+    {
+        
+        int i = 0;
+        foreach (Vector4 color in SplatManagerSystem.instance.Colors)
+        {
+            Debug.Log("SETTING RENDERER: " + i + " " + color);
+            SplatManagerSystem.instance.m_envRenderer.material.SetVector("_Dog" + i + "Color", color);
+            i++;
+        }
+    }
+
     // Use this for initialization
     void Start () {
-
+        SplatManagerSystem.instance.m_envRenderer = this.gameObject.GetComponent<Renderer>();
 		SplatManagerSystem.instance.splatsX = splatsX;
 		SplatManagerSystem.instance.splatsY = splatsY;
 
@@ -130,14 +143,8 @@ public class SplatManager : NetworkBehaviour {
 		RenderTextures ();
 		BleedTextures ();
 		StartCoroutine( UpdateScores() );
-        Renderer envRenderer = this.gameObject.GetComponent<Renderer>();
-        int i = 0;
-        foreach (Vector4 color in SplatManagerSystem.instance.Colors)
-        {
-            Debug.Log("SETTING RENDERER: " + i + " " + color);
-            envRenderer.material.SetVector("_Dog" + i + "Color", color);
-            i++;
-        }
+
+        SendColorsToRenderer();
     }
     
 	// Render textures with a command buffer.

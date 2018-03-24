@@ -3,51 +3,108 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class Splatter : NetworkBehaviour {
+public class Splatter : NetworkBehaviour
+{
 
-	public float splatScale = 1.0f;
-	private int splatsX = 1;
-	private int splatsY = 1;
-	private Transform _emitter;
+    public const short RequestDogColorsMsgId = 101;
+    public const short DogColorsMsgId = 201;
+
+    public float splatScale = 1.0f;
+    private int splatsX = 1;
+    private int splatsY = 1;
+    private Transform _emitter;
 
     [SyncVar]
-	private Vector4 channelMask = new Vector4(0,0,0,1);
+    private Vector4 channelMask = new Vector4(0, 0, 0, 1);
 
     private List<Vector4> colors = new List<Vector4>();
-	
-	public void SetEmitter(Transform t){
-		_emitter = t;
-	}
 
-    public void SetColors(List<Vector4> c) {
+    public void SetEmitter(Transform t)
+    {
+        _emitter = t;
+    }
+
+    public void SetColors(List<Vector4> c)
+    {
         foreach (var col in c)
         {
             colors.Add(col);
         }
     }
 
-	public void SetChannel(Vector4 c){
-		channelMask = c;
-	}
+    public void SetChannel(Vector4 c)
+    {
+        channelMask = c;
+    }
 
-    public void SetColor(Vector4 c){
+    public void SetColor(Vector4 c)
+    {
         //color = c;
     }
 
 
     [Command]
-    public void CmdSplatCommand(Splat newSplat){
+    public void CmdSplatCommand(Splat newSplat)
+    {
         SplatManagerSystem.instance.AddSplat(newSplat);
         RpcAddSplat(newSplat);
     }
     [ClientRpc]
     public void RpcAddSplat(Splat s)
     {
-        SplatManagerSystem.instance.AddSplat(s);    
+        SplatManagerSystem.instance.AddSplat(s);
+    }
+
+    private void OnDogColorsRequested(NetworkMessage msg) {
+        Debug.Log("Dog Color Request Received.");
+        int id = msg.conn.connectionId;
+
+        DogColorsMsg response = new DogColorsMsg();
+        int i = 0;
+        foreach(Vector4 c in colors){
+            if (i == 0) { response.Dog0Color = c; }
+            if (i == 1) { response.Dog1Color = c; }
+            if (i == 2) { response.Dog2Color = c; }
+            i++;
+        }
+        NetworkServer.SendToClient(id, DogColorsMsgId, response);
+    }
+
+    private void OnDogColorsReceived(NetworkMessage msg)
+    {
+        DogColorsMsg message = msg.ReadMessage<DogColorsMsg>();
+        Debug.Log("Dog Colors Received.");
+        colors = new List<Vector4>();
+        Debug.Log(message.Dog0Color);
+        Debug.Log(message.Dog1Color);
+        Debug.Log(message.Dog2Color);
+        colors.Add(message.Dog0Color);
+        colors.Add(message.Dog1Color);
+        colors.Add(message.Dog2Color);
+        SplatManagerSystem.instance.Colors = new List<Vector4>();
+        SplatManagerSystem.instance.Colors.Add(message.Dog0Color);
+        SplatManagerSystem.instance.Colors.Add(message.Dog1Color);
+        SplatManagerSystem.instance.Colors.Add(message.Dog2Color);
+                          
+
+        SplatManager.SendColorsToRenderer();
     }
 
     void Start(){
-        SplatManagerSystem.instance.Colors = colors;
+        if (isServer)
+        {
+            NetworkServer.RegisterHandler(RequestDogColorsMsgId, OnDogColorsRequested);
+        } else {
+            GetComponent<NetworkBehaviour>().connectionToServer.RegisterHandler(DogColorsMsgId, OnDogColorsReceived);
+        }
+        if(isServer){
+            SplatManagerSystem.instance.Colors = colors;    
+        }
+        else {
+            RequestDogColorsMsg msg = new RequestDogColorsMsg();
+            msg.hi = "hi";
+            GetComponent<NetworkBehaviour>().connectionToServer.Send(RequestDogColorsMsgId, msg);
+        }
     }
 
     public void Splat(){          
