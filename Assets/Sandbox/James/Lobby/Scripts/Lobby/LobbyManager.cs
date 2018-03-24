@@ -337,6 +337,7 @@ namespace Prototype.NetworkLobby
                 {
                     DogColorList.Add(p.playerColor);
                     if(p.connectionId == conn.connectionId){
+                        s.SetConnectionId(conn.connectionId);
                         if(i==0){
                             s.SetChannel(SplatChannel.DOG0);
                         } else if (i==1){

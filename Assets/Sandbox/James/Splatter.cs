@@ -5,7 +5,7 @@ using UnityEngine.Networking;
 
 public class Splatter : NetworkBehaviour
 {
-
+    private int _connectionId;
     public const short RequestDogColorsMsgId = 101;
     public const short DogColorsMsgId = 201;
 
@@ -14,10 +14,13 @@ public class Splatter : NetworkBehaviour
     private int splatsY = 1;
     private Transform _emitter;
 
-    [SyncVar]
     private Vector4 channelMask = new Vector4(0, 0, 0, 1);
 
     private List<Vector4> colors = new List<Vector4>();
+
+    public void SetConnectionId(int id){
+        _connectionId = id;
+    }
 
     public void SetEmitter(Transform t)
     {
@@ -56,10 +59,22 @@ public class Splatter : NetworkBehaviour
     }
 
     private void OnDogColorsRequested(NetworkMessage msg) {
+        DogColorsMsg response = new DogColorsMsg();
         Debug.Log("Dog Color Request Received.");
         int id = msg.conn.connectionId;
+        GameObject[] p = GameObject.FindGameObjectsWithTag("Player");
 
-        DogColorsMsg response = new DogColorsMsg();
+        for (int j = 0; j < p.Length; j++)
+        {
+            if(p[j] != null){
+                Splatter s = p[j].GetComponent<Splatter>();
+                if (s != null && s._connectionId == id)
+                {
+                    response.Channel = s.channelMask;
+                }
+            }
+        }
+
         int i = 0;
         foreach(Vector4 c in colors){
             if (i == 0) { response.Dog0Color = c; }
@@ -85,6 +100,8 @@ public class Splatter : NetworkBehaviour
         SplatManagerSystem.instance.Colors.Add(message.Dog0Color);
         SplatManagerSystem.instance.Colors.Add(message.Dog1Color);
         SplatManagerSystem.instance.Colors.Add(message.Dog2Color);
+        Debug.Log("Old Channel: " + channelMask + " New Channel " + message.Channel);
+        channelMask = message.Channel;
                           
 
         SplatManager.SendColorsToRenderer();
@@ -98,7 +115,7 @@ public class Splatter : NetworkBehaviour
             GetComponent<NetworkBehaviour>().connectionToServer.RegisterHandler(DogColorsMsgId, OnDogColorsReceived);
         }
         if(isServer){
-            SplatManagerSystem.instance.Colors = colors;    
+            SplatManagerSystem.instance.Colors = colors; 
         }
         else {
             RequestDogColorsMsg msg = new RequestDogColorsMsg();

@@ -10,6 +10,7 @@ public class RequestDogColorsMsg : MessageBase
 
 public class DogColorsMsg : MessageBase
 {
+    public Vector4 Channel;
     public Vector4 Dog0Color;
     public Vector4 Dog1Color;
     public Vector4 Dog2Color;
