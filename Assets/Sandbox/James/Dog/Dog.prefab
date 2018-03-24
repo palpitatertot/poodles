@@ -38,6 +38,7 @@ GameObject:
   - component: {fileID: 54044448616455660}
   - component: {fileID: 114234746571263242}
   - component: {fileID: 114844591384740236}
+  - component: {fileID: 114469876353424382}
   - component: {fileID: 114398851948436936}
   m_Layer: 0
   m_Name: Dog
@@ -246,6 +247,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   splatScale: 3
+--- !u!114 &114469876353424382
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1106694524284286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe9c87f5117804ca1bce064f71f7bfcd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WaterLevel: 0
+  WaterMax: 100
+  PeeCost: 1
 --- !u!114 &114844591384740236
 MonoBehaviour:
   m_ObjectHideFlags: 1

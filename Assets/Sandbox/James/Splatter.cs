@@ -5,6 +5,8 @@ using UnityEngine.Networking;
 
 public class Splatter : NetworkBehaviour
 {
+    private Dictionary<Splatter, Drinker> splatters = new Dictionary<Splatter, Drinker>();
+
     private int _connectionId;
     public const short RequestDogColorsMsgId = 101;
     public const short DogColorsMsgId = 201;
@@ -49,6 +51,9 @@ public class Splatter : NetworkBehaviour
     [Command]
     public void CmdSplatCommand(Splat newSplat)
     {
+        if(!ValidateSplat(newSplat)){
+            return;
+        }
         SplatManagerSystem.instance.AddSplat(newSplat);
         RpcAddSplat(newSplat);
     }
@@ -71,6 +76,7 @@ public class Splatter : NetworkBehaviour
                 if (s != null && s._connectionId == id)
                 {
                     response.Channel = s.channelMask;
+                    splatters.Add(s, s.gameObject.GetComponent<Drinker>());
                 }
             }
         }
@@ -107,9 +113,49 @@ public class Splatter : NetworkBehaviour
         SplatManager.SendColorsToRenderer();
     }
 
+
+    public void TrySplat(Splat newSplat){
+        if (!isServer)
+        {
+            TrySplat(newSplat);
+            CmdSplatCommand(newSplat);
+        }
+        else
+        {
+            if(!ValidateSplat(newSplat)){
+                return;
+            }
+            RpcAddSplat(newSplat);
+        }
+    }
+
+    public bool ValidateSplat(Splat newSplat){
+        Debug.Log("Seeing if peeing?");
+        foreach (Splatter s in splatters.Keys)
+        {
+            if (newSplat.channelMask != SplatChannel.MAN && s.channelMask == newSplat.channelMask)
+            {
+                Drinker d = s.gameObject.GetComponent<Drinker>();
+                Debug.Log("Found me to pee");
+                if (!d.CanPee())
+                {
+                    Debug.Log("Can't pee");
+                    return false;
+                }
+                else
+                {
+                    Debug.Log("Peeing");
+                    d.Pee();
+                }
+            }
+        }
+        return true;
+    }
+
     void Start(){
         if (isServer)
         {
+            splatters.Add(GetComponent<Splatter>(), GetComponent<Drinker>());
             NetworkServer.RegisterHandler(RequestDogColorsMsgId, OnDogColorsRequested);
         } else {
             GetComponent<NetworkBehaviour>().connectionToServer.RegisterHandler(DogColorsMsgId, OnDogColorsReceived);
@@ -153,12 +199,8 @@ public class Splatter : NetworkBehaviour
 
 			newSplat.scaleBias = new Vector4(splatscaleX, splatscaleY, splatsBiasX, splatsBiasY );
 
-            if (!isServer)
-            {
-                CmdSplatCommand(newSplat);
-            } else {
-                RpcAddSplat(newSplat);
-            }
+            TrySplat(newSplat);
+            
 			GameObject.Destroy( newSplatObject ); // make this a pool
 		}
 	}
