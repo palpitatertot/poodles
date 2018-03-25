@@ -12,6 +12,11 @@ namespace Prototype.NetworkLobby
 {
     public class LobbyManager : NetworkLobbyManager 
     {
+        public static int ManTeamLimit = 1;
+
+        public static int ManTeamCount = 0;
+
+
         private Dictionary<int, LobbyPlayer> lobbyPlayers;
         private Dictionary<int, Teams.Team> currentPlayers;
 

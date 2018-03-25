@@ -76,7 +76,10 @@ public class Splatter : NetworkBehaviour
                 if (s != null && s._connectionId == id)
                 {
                     response.Channel = s.channelMask;
-                    splatters.Add(s, s.gameObject.GetComponent<Drinker>());
+                    if(!splatters.ContainsKey(s)) {
+                        splatters.Add(s, s.gameObject.GetComponent<Drinker>());
+                    }
+
                 }
             }
         }
@@ -117,7 +120,6 @@ public class Splatter : NetworkBehaviour
     public void TrySplat(Splat newSplat){
         if (!isServer)
         {
-            TrySplat(newSplat);
             CmdSplatCommand(newSplat);
         }
         else

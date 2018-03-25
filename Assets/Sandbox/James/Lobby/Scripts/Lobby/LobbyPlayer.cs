@@ -11,7 +11,7 @@ namespace Prototype.NetworkLobby
     //Any LobbyHook can then grab it and pass those value to the game player prefab (see the Pong Example in the Samples Scenes)
     public class LobbyPlayer : NetworkLobbyPlayer
     {
-        static Vector4[] Colors = new Vector4[] { SplatColor.MAGENTA, SplatColor.INDIGO, SplatColor.CYAN, SplatColor.NEONYELLOW, SplatColor.NEONORANGE, SplatColor.NEONGREEN, SplatColor.WHITE };
+        static Vector4[] Colors = new Vector4[] { SplatColor.MAGENTA, SplatColor.INDIGO, SplatColor.CYAN, SplatColor.NEONYELLOW, SplatColor.NEONORANGE, SplatColor.NEONGREEN };
         //used on server to avoid assigning the same color to two player
         static List<int> _colorInUse = new List<int>();        
         public int connectionId;
@@ -27,7 +27,6 @@ namespace Prototype.NetworkLobby
         public GameObject localIcone;
         public GameObject remoteIcone;
 
-        //OnMyName function will be invoked on clients when server change the value of playerName
         [SyncVar(hook = "OnMyName")]
         public string playerName = "";
         [SyncVar(hook = "OnMyColor")]
@@ -206,33 +205,28 @@ namespace Prototype.NetworkLobby
 
 		public void OnMyTeam(Teams.Team newTeam)
 		{            
-			playerTeam = newTeam;
-			if (newTeam == Teams.Team.DOGS) {
-				teamButton.GetComponent<Image> ().sprite = dogTeamImage;
-                OnColorClicked();
-			} else {
-				teamButton.GetComponent<Image> ().sprite = manTeamImage;
-                OnColorClicked();                
-			}
-
-            if(isServer)
+            if (newTeam == Teams.Team.DOGS)
             {
-                RpcUpdateTeam(newTeam);
-            } else
-            {
-                CmdUpdateTeam(newTeam);
+                teamButton.GetComponent<Image>().sprite = dogTeamImage;
             }
-
+            else
+            {
+                teamButton.GetComponent<Image>().sprite = manTeamImage;
+            }
 		}
 
-        [ClientRpc]
-        public void RpcUpdateTeam(Teams.Team team){
-            CmdUpdateTeam(team);
+        public void TeamChange()
+        {
+            if (playerTeam == Teams.Team.DOGS)
+            {
+                CmdTeamChange(Teams.Team.MAN);
+            }
+            else
+            {
+                CmdTeamChange(Teams.Team.DOGS);
+            }
         }
-        [Command]
-        public void CmdUpdateTeam(Teams.Team team){
-            LobbyManager.s_Singleton.SetTeamLobby(GetComponent<NetworkIdentity>().connectionToClient, team);
-        }
+
         //===== UI Handler
 
         //Note that those handler use Command function, as we need to change the value on the server not locally
@@ -244,7 +238,8 @@ namespace Prototype.NetworkLobby
 
 		public void OnTeamClicked()
 		{
-			CmdTeamChange();
+			TeamChange();
+            CmdColorChange();
 		}
 
         public void OnReadyClicked()
@@ -287,46 +282,61 @@ namespace Prototype.NetworkLobby
             CheckRemoveButton();
         }
 
+        [ClientRpc]
+        public void RpcUpdateTeam(Teams.Team newTeam)
+        {
+            playerTeam = newTeam;
+            if (newTeam == Teams.Team.DOGS)
+            {
+                teamButton.GetComponent<Image>().sprite = dogTeamImage;
+            }
+            else
+            {
+                teamButton.GetComponent<Image>().sprite = manTeamImage;
+            }
+        }
+
         //====== Server Command
 
-		[Command]
-		public void CmdTeamChange()
-		{
-			if (playerTeam == Teams.Team.DOGS){
-                if (IsWhiteInUse())
-                    return;
-                playerTeam = Teams.Team.MAN;                
-			} else {
-				playerTeam = Teams.Team.DOGS;              
-			}
-		}
-
-        private bool IsWhiteInUse()
+        [Command]
+        public void CmdTeamChange(Teams.Team team)
         {
-            for (int i = 0; i < _colorInUse.Count; i++)
+            string h;
+            if (team == Teams.Team.DOGS) { h = "Dogs"; }
+            else { h = "Man"; }
+            Debug.Log("Selected Team is " + h);
+            Debug.Log("Entering ManCount is " + LobbyManager.ManTeamCount);
+            if (team == Teams.Team.MAN && LobbyManager.ManTeamCount < LobbyManager.ManTeamLimit)
             {
-                if (Colors[_colorInUse[i]] == SplatColor.WHITE)
-                    return true;
+                LobbyManager.ManTeamCount++;
             }
-
-            return false;
+            else if (team == Teams.Team.DOGS)
+            {
+                LobbyManager.ManTeamCount--;              
+            }
+            else
+            {
+                Debug.Log("Too many men.");
+                return;
+            } 
+            playerTeam = team;
+            LobbyManager.s_Singleton.SetTeamLobby(GetComponent<NetworkIdentity>().connectionToClient, team);
+            RpcUpdateTeam(team);
         }
 
         [Command]
         public void CmdColorChange()
-        {                        
+        {
+            int idx = 0;
             if (playerTeam == Teams.Team.DOGS)
             {
-                int idx = System.Array.IndexOf(Colors, playerColor);
-
-                int whiteIndex = System.Array.IndexOf(Colors, SplatColor.WHITE);
-
-                int inUseIdx = _colorInUse.IndexOf(idx);
+                if(playerColor != SplatColor.WHITE){
+                    idx = System.Array.IndexOf(Colors, playerColor);
+                    _colorInUse.Remove(idx);
+                }
 
                 if (idx < 0) idx = 0;
-
                 idx = (idx + 1) % Colors.Length;
-
                 bool alreadyInUse = false;
 
                 do
@@ -334,7 +344,7 @@ namespace Prototype.NetworkLobby
                     alreadyInUse = false;
                     for (int i = 0; i < _colorInUse.Count; ++i)
                     {
-                        if (_colorInUse[i] == idx && idx != whiteIndex)
+                        if (_colorInUse[i] == idx)
                         {//that color is already in use
                             alreadyInUse = true;
                             idx = (idx + 1) % Colors.Length;
@@ -343,33 +353,17 @@ namespace Prototype.NetworkLobby
                 }
                 while (alreadyInUse);
 
-                if (inUseIdx >= 0)
-                {//if we already add an entry in the colorTabs, we change it
-                    _colorInUse[inUseIdx] = idx;
-                }
-                else
-                {//else we add it
-                    _colorInUse.Add(idx);
-                }
-
+                _colorInUse.Add(idx);
                 playerColor = Colors[idx];
             }
             else if(playerTeam == Teams.Team.MAN)
             {
-                int idx = System.Array.IndexOf(Colors, SplatColor.WHITE);
-
-                int inUseIdx = _colorInUse.IndexOf(idx);                
-
-                if (inUseIdx >= 0)
-                {//if we already add an entry in the colorTabs, we change it
-                    _colorInUse[inUseIdx] = idx;
+                if (playerColor != SplatColor.WHITE)
+                {
+                    idx = System.Array.IndexOf(Colors, playerColor);
+                    _colorInUse.Remove(idx);
                 }
-                else
-                {//else we add it
-                    _colorInUse.Add(idx);
-                }
-
-                playerColor = Colors[idx];            
+                playerColor = SplatColor.WHITE;
             }
         }
 
