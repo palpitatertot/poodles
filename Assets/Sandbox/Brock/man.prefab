@@ -257,6 +257,8 @@ MonoBehaviour:
   PlayerRunSpeed: 15
   MouseSpeed: 15
   CameraPitchClamp: 90
+  TPMesh: {fileID: 1976982649172292}
+  FPMesh: {fileID: 1267428836202526}
 --- !u!114 &114660605385762262
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -596,7 +596,7 @@ Prefab:
         type: 2}
       propertyPath: m_SpawnPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 1750133995269780, guid: e6f4eff624dbb41bd9b3639b89754dea,
+      objectReference: {fileID: 1397244083491912, guid: 7aad56432250d48fd87fe3f134c897bc,
         type: 2}
     - target: {fileID: 114044569559339282, guid: a3542564c8ddf4b1aa312e5c0afd485e,
         type: 2}
@@ -613,7 +613,7 @@ Prefab:
         type: 2}
       propertyPath: m_GamePlayerPrefab
       value: 
-      objectReference: {fileID: 1750133995269780, guid: e6f4eff624dbb41bd9b3639b89754dea,
+      objectReference: {fileID: 1397244083491912, guid: 7aad56432250d48fd87fe3f134c897bc,
         type: 2}
     - target: {fileID: 114044569559339282, guid: a3542564c8ddf4b1aa312e5c0afd485e,
         type: 2}

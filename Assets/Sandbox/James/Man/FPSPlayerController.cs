@@ -5,7 +5,8 @@ public class FPSPlayerController : NetworkBehaviour {
 	public float PlayerRunSpeed;
 	public float MouseSpeed;
 	public float CameraPitchClamp;
-
+	public GameObject TPMesh;
+	public GameObject FPMesh;
     private CharacterController _front; 
 	private float _pitch;
 	private Transform _camera;
@@ -26,6 +27,9 @@ public class FPSPlayerController : NetworkBehaviour {
 			_emitter.SetEmitter(transform);
 			_emitter.SetChannel(_splatChannel);
             _front = GetComponent<CharacterController>();
+			TPMesh.SetActive (false);
+			FPMesh.SetActive (true);
+
         }
 		
 	}
