@@ -10,4 +10,5 @@ public class SplatColor
     public static Vector4 NEONGREEN  = new Vector4(57f/255f, 1, 20f/255f, 1);          //#39FF14
     public static Vector4 NEONORANGE = new Vector4(253f/255f, 95f/255f, 0, 1);         //#FD5F00
     public static Vector4 NEONYELLOW = new Vector4(243f/255f, 243f/255f, 21f/255f, 1); //#F3F315
+    public static Vector4 WHITE      = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);            //#FFFFFF
 }

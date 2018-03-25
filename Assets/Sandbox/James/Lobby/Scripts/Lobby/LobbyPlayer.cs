@@ -11,9 +11,9 @@ namespace Prototype.NetworkLobby
     //Any LobbyHook can then grab it and pass those value to the game player prefab (see the Pong Example in the Samples Scenes)
     public class LobbyPlayer : NetworkLobbyPlayer
     {
-        static Vector4[] Colors = new Vector4[] { SplatColor.MAGENTA, SplatColor.INDIGO, SplatColor.CYAN, SplatColor.NEONYELLOW, SplatColor.NEONORANGE, SplatColor.NEONGREEN };
+        static Vector4[] Colors = new Vector4[] { SplatColor.MAGENTA, SplatColor.INDIGO, SplatColor.CYAN, SplatColor.NEONYELLOW, SplatColor.NEONORANGE, SplatColor.NEONGREEN, SplatColor.WHITE };
         //used on server to avoid assigning the same color to two player
-        static List<int> _colorInUse = new List<int>();
+        static List<int> _colorInUse = new List<int>();        
         public int connectionId;
 		public Sprite dogTeamImage;
 		public Sprite manTeamImage;
@@ -41,11 +41,7 @@ namespace Prototype.NetworkLobby
         static Color JoinColor = new Color(255.0f/255.0f, 0.0f, 101.0f/255.0f,1.0f);
         static Color NotReadyColor = new Color(34.0f / 255.0f, 44 / 255.0f, 55.0f / 255.0f, 1.0f);
         static Color ReadyColor = new Color(0.0f, 204.0f / 255.0f, 204.0f / 255.0f, 1.0f);
-        static Color TransparentColor = new Color(0, 0, 0, 0);
-
-        //static Color OddRowColor = new Color(250.0f / 255.0f, 250.0f / 255.0f, 250.0f / 255.0f, 1.0f);
-        //static Color EvenRowColor = new Color(180.0f / 255.0f, 180.0f / 255.0f, 180.0f / 255.0f, 1.0f);
-
+        static Color TransparentColor = new Color(0, 0, 0, 0);        
 
         public override void OnClientEnterLobby()
         {
@@ -209,12 +205,14 @@ namespace Prototype.NetworkLobby
         }
 
 		public void OnMyTeam(Teams.Team newTeam)
-		{
+		{            
 			playerTeam = newTeam;
 			if (newTeam == Teams.Team.DOGS) {
 				teamButton.GetComponent<Image> ().sprite = dogTeamImage;
+                OnColorClicked();
 			} else {
 				teamButton.GetComponent<Image> ().sprite = manTeamImage;
+                OnColorClicked();                
 			}
 
             if(isServer)
@@ -295,49 +293,84 @@ namespace Prototype.NetworkLobby
 		public void CmdTeamChange()
 		{
 			if (playerTeam == Teams.Team.DOGS){
-				playerTeam = Teams.Team.MAN;
+                if (IsWhiteInUse())
+                    return;
+                playerTeam = Teams.Team.MAN;                
 			} else {
-				playerTeam = Teams.Team.DOGS;
+				playerTeam = Teams.Team.DOGS;              
 			}
 		}
 
+        private bool IsWhiteInUse()
+        {
+            for (int i = 0; i < _colorInUse.Count; i++)
+            {
+                if (Colors[_colorInUse[i]] == SplatColor.WHITE)
+                    return true;
+            }
+
+            return false;
+        }
+
         [Command]
         public void CmdColorChange()
-        {
-            int idx = System.Array.IndexOf(Colors, playerColor);
-
-            int inUseIdx = _colorInUse.IndexOf(idx);
-
-            if (idx < 0) idx = 0;
-
-            idx = (idx + 1) % Colors.Length;
-
-            bool alreadyInUse = false;
-
-            do
+        {                        
+            if (playerTeam == Teams.Team.DOGS)
             {
-                alreadyInUse = false;
-                for (int i = 0; i < _colorInUse.Count; ++i)
+                int idx = System.Array.IndexOf(Colors, playerColor);
+
+                int whiteIndex = System.Array.IndexOf(Colors, SplatColor.WHITE);
+
+                int inUseIdx = _colorInUse.IndexOf(idx);
+
+                if (idx < 0) idx = 0;
+
+                idx = (idx + 1) % Colors.Length;
+
+                bool alreadyInUse = false;
+
+                do
                 {
-                    if (_colorInUse[i] == idx)
-                    {//that color is already in use
-                        alreadyInUse = true;
-                        idx = (idx + 1) % Colors.Length;
+                    alreadyInUse = false;
+                    for (int i = 0; i < _colorInUse.Count; ++i)
+                    {
+                        if (_colorInUse[i] == idx && idx != whiteIndex)
+                        {//that color is already in use
+                            alreadyInUse = true;
+                            idx = (idx + 1) % Colors.Length;
+                        }
                     }
                 }
-            }
-            while (alreadyInUse);
+                while (alreadyInUse);
 
-            if (inUseIdx >= 0)
-            {//if we already add an entry in the colorTabs, we change it
-                _colorInUse[inUseIdx] = idx;
-            }
-            else
-            {//else we add it
-                _colorInUse.Add(idx);
-            }
+                if (inUseIdx >= 0)
+                {//if we already add an entry in the colorTabs, we change it
+                    _colorInUse[inUseIdx] = idx;
+                }
+                else
+                {//else we add it
+                    _colorInUse.Add(idx);
+                }
 
-            playerColor = Colors[idx];
+                playerColor = Colors[idx];
+            }
+            else if(playerTeam == Teams.Team.MAN)
+            {
+                int idx = System.Array.IndexOf(Colors, SplatColor.WHITE);
+
+                int inUseIdx = _colorInUse.IndexOf(idx);                
+
+                if (inUseIdx >= 0)
+                {//if we already add an entry in the colorTabs, we change it
+                    _colorInUse[inUseIdx] = idx;
+                }
+                else
+                {//else we add it
+                    _colorInUse.Add(idx);
+                }
+
+                playerColor = Colors[idx];            
+            }
         }
 
         [Command]
