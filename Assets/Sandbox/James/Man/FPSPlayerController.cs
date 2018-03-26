@@ -3,19 +3,24 @@ using UnityEngine.Networking;
 
 public class FPSPlayerController : NetworkBehaviour {
 	public float PlayerRunSpeed;
+    public float PlayerTurnSpeed = 1f;
 	public float MouseSpeed;
 	public float CameraPitchClamp;
 	public GameObject TPMesh;
 	public GameObject FPMesh;
-    private CharacterController _front; 
+    private CharacterController _front;
+    private Rigidbody _body;
 	private float _pitch;
 	private Transform _camera;
 	Vector4 _splatChannel = new Vector4(0, 0, 0, 0);
 	private Splatter _emitter;
     private Vector3 _motion;
+    private Vector3 _rotation;
 
 	void Start()
 	{
+        _motion = Vector3.zero;
+        _rotation = Vector3.zero;
 		_pitch = 0f;
         if (isLocalPlayer)
         {
@@ -26,10 +31,9 @@ public class FPSPlayerController : NetworkBehaviour {
 			_emitter = GetComponent<Splatter>();
 			_emitter.SetEmitter(transform);
 			_emitter.SetChannel(_splatChannel);
-            _front = GetComponent<CharacterController>();
+            _body = GetComponent<Rigidbody>();
 			TPMesh.SetActive (false);
 			FPMesh.SetActive (true);
-
         }
 		
 	}
@@ -45,21 +49,27 @@ public class FPSPlayerController : NetworkBehaviour {
 		{
 			_emitter.Splat();
 		}
-        _motion = Vector3.zero;
-		var x = Input.GetAxis("Horizontal") * Time.deltaTime * PlayerRunSpeed;
-		var z = Input.GetAxis("Vertical") * Time.deltaTime * PlayerRunSpeed;
-		var rotation = Input.GetAxis("Mouse X") * MouseSpeed;
+
+		var x = Input.GetAxis("Horizontal") * transform.right;
+		var z = Input.GetAxis("Vertical") * transform.forward;
+        _motion = (x + z).normalized * PlayerRunSpeed;
+		var rot = Input.GetAxis("Mouse X") * MouseSpeed;
+        _rotation = new Vector3(0, rot, 0) * PlayerTurnSpeed;
 		_pitch -= Input.GetAxis("Mouse Y") * MouseSpeed;
 		_pitch = Mathf.Clamp (_pitch, -CameraPitchClamp, CameraPitchClamp);
-        //transform.Translate(x, 0, z);
-        transform.Rotate(0, rotation, 0);
-        _motion = new Vector3(x, 0, z);
-        _motion = transform.TransformDirection(_motion);
-        _front.Move(_motion);
+
         _camera.localRotation = Quaternion.AngleAxis (_pitch, Vector3.right);
 	}
 
-		
+	private void FixedUpdate()
+	{
+        if(_motion != Vector3.zero){
+            _body.MovePosition(_body.position + _motion * PlayerRunSpeed * Time.fixedDeltaTime);    
+        }
 
-    
+        _body.MoveRotation(_body.rotation * Quaternion.Euler(_rotation));
+	}
+
+
+
 }

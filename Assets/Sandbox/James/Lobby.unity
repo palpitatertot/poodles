@@ -560,7 +560,7 @@ Prefab:
     - target: {fileID: 224759315416267812, guid: a3542564c8ddf4b1aa312e5c0afd485e,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -107.394196
+      value: -194
       objectReference: {fileID: 0}
     - target: {fileID: 224759315416267812, guid: a3542564c8ddf4b1aa312e5c0afd485e,
         type: 2}
@@ -580,7 +580,7 @@ Prefab:
     - target: {fileID: 224056953233320650, guid: a3542564c8ddf4b1aa312e5c0afd485e,
         type: 2}
       propertyPath: m_AnchoredPosition.y
-      value: -537
+      value: -447
       objectReference: {fileID: 0}
     - target: {fileID: 114262640962901216, guid: a3542564c8ddf4b1aa312e5c0afd485e,
         type: 2}
@@ -619,6 +619,14 @@ Prefab:
         type: 2}
       propertyPath: m_PlayScene
       value: Pee_Test_Scene
+      objectReference: {fileID: 0}
+    - target: {fileID: 1346039308948692, guid: a3542564c8ddf4b1aa312e5c0afd485e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1209501781904100, guid: a3542564c8ddf4b1aa312e5c0afd485e, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a3542564c8ddf4b1aa312e5c0afd485e, type: 2}
