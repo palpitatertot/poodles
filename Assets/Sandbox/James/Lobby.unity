@@ -306,7 +306,20 @@ Prefab:
     - target: {fileID: 114329887678643258, guid: a3542564c8ddf4b1aa312e5c0afd485e,
         type: 2}
       propertyPath: m_Text
-      value: 
+      value: 127.0.0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1525916447262928, guid: a3542564c8ddf4b1aa312e5c0afd485e, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 224506372159211206, guid: a3542564c8ddf4b1aa312e5c0afd485e,
+        type: 2}
+      propertyPath: m_AnchoredPosition.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 1772530181251914, guid: a3542564c8ddf4b1aa312e5c0afd485e, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a3542564c8ddf4b1aa312e5c0afd485e, type: 2}
