@@ -36,6 +36,7 @@ public class SplatManagerSystem
 	public int splatsY;
 
 	public Vector4 scores;
+	public float gameTimer;
 
     internal List<Splat> m_Splats = new List<Splat>();
     internal List<Splat> m_NetworkSplats = new List<Splat>();
@@ -50,6 +51,9 @@ public class SplatManagerSystem
 
 public class SplatManager : NetworkBehaviour {
     
+	public pauseMenu UI;
+	float SMgameTime = 180.0f;
+
     public int sizeX;
 	public int sizeY;
 
@@ -145,6 +149,9 @@ public class SplatManager : NetworkBehaviour {
 		StartCoroutine( UpdateScores() );
 
         SendColorsToRenderer();
+
+		//Dave Changes
+		UI = GameObject.Find("PauseCanvas").GetComponent<pauseMenu>();
     }
     
 	// Render textures with a command buffer.
@@ -301,6 +308,11 @@ public class SplatManager : NetworkBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		SMgameTime -= Time.deltaTime;
+		SplatManagerSystem.instance.gameTimer = SMgameTime;
+		//Debug.Log ("Timer: " + SMgameTime);
+		if (SMgameTime <= 0)
+			UI.endGame ();
 		PaintSplats ();        
 	}	
 }
