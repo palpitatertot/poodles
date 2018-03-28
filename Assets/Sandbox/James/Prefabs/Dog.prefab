@@ -259,8 +259,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WaterLevel: 0
-  WaterMax: 100
-  PeeCost: 1
+  WaterMax: 1000
+  PeeCost: 3
+  menu: {fileID: 0}
 --- !u!114 &114844591384740236
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -293,8 +294,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ba91b11168cd143ffb9e1e46a44171f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FrontRunSpeed: 100
-  RearRunSpeed: 50
-  FrontTurnSpeed: 10
-  RearTurnSpeed: 5
+  FrontRunSpeed: 50
+  RearRunSpeed: 200
+  FrontTurnSpeed: 2
+  RearTurnSpeed: 0.1
   MouseSpeed: 0
