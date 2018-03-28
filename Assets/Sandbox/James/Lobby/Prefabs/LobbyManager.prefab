@@ -1146,6 +1146,9 @@ MonoBehaviour:
   m_LobbyScene: Lobby
   m_PlayScene: Pee_Test_Scene
   lobbySlots: []
+  DogMat0: {fileID: 2100000, guid: 861f19d4b85f44fa69a01702fbe49d29, type: 2}
+  DogMat1: {fileID: 2100000, guid: f9733621f3f5b415c913a74f18871154, type: 2}
+  DogMat2: {fileID: 2100000, guid: 532a254e44d0141a5b15020c2ea60c6f, type: 2}
   prematchCountdown: 3
   backButton: {fileID: 114723591275338934}
   addPlayerButton: {fileID: 1209501781904100}

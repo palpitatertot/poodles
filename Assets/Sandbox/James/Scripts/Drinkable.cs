@@ -50,7 +50,6 @@ public class Drinkable : NetworkBehaviour {
 
     IEnumerator Drinking(){
         while(true){
-            Debug.Log("In Drinking Coroutine " + WaterPerSecond);
             foreach(Drinker d in inRange){
                 d.Drink(WaterPerSecond);    
             }
