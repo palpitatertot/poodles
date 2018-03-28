@@ -21,11 +21,14 @@ GameObject:
   - component: {fileID: 4785413917884286}
   - component: {fileID: 33011533678257874}
   - component: {fileID: 23542662671629036}
+  - component: {fileID: 114773021130736894}
   - component: {fileID: 114157924729976170}
   - component: {fileID: 114076216677837198}
+  - component: {fileID: 65308620629303432}
+  - component: {fileID: 54478595533080620}
   m_Layer: 0
   m_Name: Mop
-  m_TagString: Untagged
+  m_TagString: Grabbable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -85,6 +88,33 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1836243754828164}
   m_Mesh: {fileID: 4300000, guid: c792207dc9c944abdb1b78e72d93bd12, type: 3}
+--- !u!54 &54478595533080620
+Rigidbody:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836243754828164}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &65308620629303432
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836243754828164}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 32.24373, y: 308.94016, z: 29.99189}
+  m_Center: {x: 0.81316376, y: -34.470078, z: 0.67248917}
 --- !u!114 &114076216677837198
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -138,3 +168,14 @@ MonoBehaviour:
     i15: 172
   m_ServerOnly: 0
   m_LocalPlayerAuthority: 0
+--- !u!114 &114773021130736894
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836243754828164}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1af1ef09e10f641ffaa708e069c181fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
