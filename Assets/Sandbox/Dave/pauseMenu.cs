@@ -3,93 +3,113 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Networking;
 
-public class pauseMenu : MonoBehaviour {
+public class pauseMenu : NetworkBehaviour
+{
 
-	public static bool isPaused = false;
-	public bool showScore = false;
-	public Texture2D menu;
+    public static bool isPaused = false;
+    public bool showScore = false;
+    public Texture2D menu;
+    public Drinker drinker;
 
-	public GameObject pauseMenuUI;
-	public GameObject scoreMenuUI;
+    public GameObject pauseMenuUI;
+    public GameObject scoreMenuUI;
+    public GameObject waterLevelUI;
 
-	public Image p1Score;
-	public Image p2Score;
-	public Image p3Score;
+    public Image p1Score;
+    public Image p2Score;
+    public Image p3Score;
 
-	void Start()
-	{
+    public Image waterLevel;
+
+    void Start()
+    {
         pauseMenuUI = transform.GetChild(0).gameObject;
         scoreMenuUI = transform.GetChild(1).gameObject;
+        waterLevelUI = transform.GetChild(2).gameObject;
 
-		p1Score = scoreMenuUI.transform.GetChild(0).GetComponent<Image>();
-		p2Score = scoreMenuUI.transform.GetChild(1).GetComponent<Image>();
-		p3Score = scoreMenuUI.transform.GetChild(2).GetComponent<Image>();
+        p1Score = scoreMenuUI.transform.GetChild(0).GetComponent<Image>();
+        p2Score = scoreMenuUI.transform.GetChild(1).GetComponent<Image>();
+        p3Score = scoreMenuUI.transform.GetChild(2).GetComponent<Image>();
 
-		p1Score.fillAmount = 0;
-		p2Score.fillAmount = 0;
-		p3Score.fillAmount = 0;
-	}
+        waterLevel = waterLevelUI.transform.GetChild(0).GetComponent<Image>();
+        //waterLevel.rectTransform.offsetMax = new Vector2( 0, -200);
+        //waterLevel.rectTransform.offsetMin = new Vector2(-100, 200);
+        waterLevel.fillAmount = 0;
 
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetKeyDown (KeyCode.Escape)) {
-			Pause ();
-		}
+        p1Score.fillAmount = 0;
+        p2Score.fillAmount = 0;
+        p3Score.fillAmount = 0;
+    }
 
-		if (Input.GetKeyDown (KeyCode.Tab) || Input.GetKeyUp(KeyCode.Tab)) {
-			ShowTabScore ();
-		}
-	}
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Pause();
+        }
 
-	void Resume()
-	{
-		pauseMenuUI.SetActive (false);
-		isPaused = false;
-	}
+        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyUp(KeyCode.Tab))
+        {
+            ShowTabScore();
+        }
+    }
 
-	void Pause()
-	{
-		isPaused = !isPaused;
-		pauseMenuUI.SetActive (isPaused);
-	}
+    void Resume()
+    {
+        pauseMenuUI.SetActive(false);
+        isPaused = false;
+    }
 
-	void ShowTabScore()
-	{
-		showScore = !showScore;
-		updateScore ();
-		scoreMenuUI.SetActive (showScore);
-	}
+    void Pause()
+    {
+        isPaused = !isPaused;
+        pauseMenuUI.SetActive(isPaused);
+    }
 
-	public void LoadMenu()
-	{
-		SceneManager.LoadScene ("Lobby");
-	}
+    void ShowTabScore()
+    {
+        showScore = !showScore;
+        updateScore();
+        scoreMenuUI.SetActive(showScore);
+    }
 
-	public void QuitGame()
-	{
-		Debug.Log ("Quitting Game");
-		Application.Quit ();
-	}
+    public void LoadMenu()
+    {
+        SceneManager.LoadScene("Lobby");
+    }
 
-	void updateScore()
-	{
-		Vector4 scores = SplatManagerSystem.instance.scores + new Vector4(0.1f,0.1f,0.1f,0.1f);
-		float totalScores = scores.x + scores.y + scores.z + scores.w;
-		float yellowScore =( scores.x / totalScores );
-		float redScore = ( scores.y / totalScores );
-		float greenScore = ( scores.z / totalScores );
-		float blueScore = ( scores.w / totalScores );
+    public void QuitGame()
+    {
+        Debug.Log("Quitting Game");
+        Application.Quit();
+    }
 
-		Debug.Log ("Press");
-		Debug.Log("Y"+yellowScore);
-		Debug.Log ("R" + redScore);
-		Debug.Log ("G" + greenScore);
-		Debug.Log ("B" + blueScore);
+    void updateScore()
+    {
+        Vector4 scores = SplatManagerSystem.instance.scores + new Vector4(0.1f, 0.1f, 0.1f, 0.1f);
+        float totalScores = scores.x + scores.y + scores.z + scores.w;
+        float yellowScore = (scores.x / totalScores);
+        float redScore = (scores.y / totalScores);
+        float greenScore = (scores.z / totalScores);
+        float blueScore = (scores.w / totalScores);
 
-		p1Score.fillAmount = yellowScore;
-		p2Score.fillAmount = greenScore;
-		p3Score.fillAmount = redScore;
-	}
+        Debug.Log("Press");
+        Debug.Log("Y" + yellowScore);
+        Debug.Log("R" + redScore);
+        Debug.Log("G" + greenScore);
+        Debug.Log("B" + blueScore);
+
+        p1Score.fillAmount = yellowScore;
+        p2Score.fillAmount = greenScore;
+        p3Score.fillAmount = redScore;
+    }
+
+    public void updateWaterLevel(float change){
+        //Debug.Log("updatingWaterLevel by " + change);
+        waterLevel.fillAmount = change;
+    }
 
 }

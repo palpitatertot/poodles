@@ -10,8 +10,16 @@ public class Drinker : NetworkBehaviour {
     public int WaterMax = 100;
     public int PeeCost = 1;
 
-    public void OnWaterChanged(int amount){
+    public pauseMenu menu;
+
+	private void Start()
+	{
+        menu = GameObject.Find("PauseCanvas").GetComponent<pauseMenu>();	
+	}
+
+	public void OnWaterChanged(int amount){
         Debug.Log("Dranking level is " + WaterLevel);
+        if (isLocalPlayer) menu.updateWaterLevel((float)WaterLevel/WaterMax);
         // insert UI Hook
     }
 
