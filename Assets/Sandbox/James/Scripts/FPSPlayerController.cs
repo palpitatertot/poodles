@@ -25,17 +25,17 @@ public class FPSPlayerController : NetworkBehaviour {
         if (isLocalPlayer)
         {
             _camera = Camera.allCameras[0].transform;
-            _camera.position = transform.position - new Vector3(0, -0.75f, .5f);
+            _camera.position = transform.position - new Vector3(0, -2f, .5f);
             _camera.gameObject.GetComponent<Camera>().cullingMask &= ~(1 << LayerMask.NameToLayer("CameraInvisible"));
             _camera.SetParent(transform);
 			_emitter = GetComponent<Splatter>();
 			_emitter.SetEmitter(transform);
 			_emitter.SetChannel(_splatChannel);
-            _body = GetComponent<Rigidbody>();
+            //_body = GetComponent<Rigidbody>();
+            _front = GetComponent<CharacterController>();
 			TPMesh.SetActive (false);
 			FPMesh.SetActive (true);
         }
-		
 	}
 
 	void Update()
@@ -52,22 +52,23 @@ public class FPSPlayerController : NetworkBehaviour {
 
 		var x = Input.GetAxis("Horizontal") * transform.right;
 		var z = Input.GetAxis("Vertical") * transform.forward;
-        _motion = (x + z).normalized * PlayerRunSpeed;
+        _motion = (x + z).normalized * PlayerRunSpeed * Time.deltaTime;
 		var rot = Input.GetAxis("Mouse X") * MouseSpeed;
         _rotation = new Vector3(0, rot, 0) * PlayerTurnSpeed;
 		_pitch -= Input.GetAxis("Mouse Y") * MouseSpeed;
 		_pitch = Mathf.Clamp (_pitch, -CameraPitchClamp, CameraPitchClamp);
-
+        transform.Rotate(_rotation);
+        _front.Move(_motion);
         _camera.localRotation = Quaternion.AngleAxis (_pitch, Vector3.right);
 	}
 
 	private void FixedUpdate()
 	{
-        if(_motion != Vector3.zero){
-            _body.MovePosition(_body.position + _motion * PlayerRunSpeed * Time.fixedDeltaTime);    
-        }
+        //if(_motion != Vector3.zero){
+        //    _body.MovePosition(_body.position + _motion * PlayerRunSpeed * Time.fixedDeltaTime);    
+        //}
 
-        _body.MoveRotation(_body.rotation * Quaternion.Euler(_rotation));
+        //_body.MoveRotation(_body.rotation * Quaternion.Euler(_rotation));
 	}
 
 

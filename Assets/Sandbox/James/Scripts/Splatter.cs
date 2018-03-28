@@ -120,6 +120,7 @@ public class Splatter : NetworkBehaviour
         SplatManager.SendColorsToRenderer();
 
         GameObject[] p = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log(p.Length + " Players found.");
         for (int j = 0; j < p.Length; j++)
         {
             if (p[j] != null)
