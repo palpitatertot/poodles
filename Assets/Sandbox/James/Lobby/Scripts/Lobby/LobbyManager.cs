@@ -67,7 +67,11 @@ namespace Prototype.NetworkLobby
             _lobbyHooks = GetComponent<Prototype.NetworkLobby.LobbyHook>();
             currentPanel = mainMenuPanel;
 
-            backButton.gameObject.SetActive(false);
+            //backButton.gameObject.SetActive(false);
+			backDelegate = ExitGame;
+			Text label = backButton.transform.GetChild (0).GetComponent<Text>();
+			label.text = "QUIT";
+
             GetComponent<Canvas>().enabled = true;
 
             DontDestroyOnLoad(gameObject);
@@ -146,13 +150,18 @@ namespace Prototype.NetworkLobby
 
             if (currentPanel != mainMenuPanel)
             {
+				Text label = backButton.transform.GetChild (0).GetComponent<Text>();
+				label.text = "BACK";
                 backButton.gameObject.SetActive(true);
             }
             else
             {
-                backButton.gameObject.SetActive(false);
+				Text label = backButton.transform.GetChild (0).GetComponent<Text>();
+				label.text = "QUIT";
+                //backButton.gameObject.SetActive(false);
                 SetServerInfo("Offline", "None");
                 _isMatchmaking = false;
+				backDelegate = ExitGame;
             }
         }
 
@@ -177,6 +186,8 @@ namespace Prototype.NetworkLobby
             backDelegate();
 			topPanel.isInGame = false;
         }
+
+
 
         // ----------------- Server management
 
@@ -228,6 +239,12 @@ namespace Prototype.NetworkLobby
             StopServer();
             ChangeTo(mainMenuPanel);
         }
+
+		public void ExitGame()
+		{
+			Debug.Log ("Exiting Game...");
+			Application.Quit ();
+		}
 
         class KickMsg : MessageBase { }
         public void KickPlayer(NetworkConnection conn)
