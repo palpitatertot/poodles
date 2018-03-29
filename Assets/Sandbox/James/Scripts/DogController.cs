@@ -8,7 +8,7 @@ public class DogController : NetworkBehaviour
 	public float FrontTurnSpeed;
 	public float RearTurnSpeed;
 	public float MouseSpeed;
-
+    public Vector3 CameraHeight = new Vector3(0, 35, 0);
 	private Transform _camera;
 	private Transform _frontPivot;
 	private Transform _rearPivot;
@@ -24,7 +24,7 @@ public class DogController : NetworkBehaviour
         {
             _camera = Camera.allCameras[0].transform;
             _camera.SetParent(transform);
-            _camera.position = transform.position + new Vector3(0, 20, 0);
+            _camera.position = transform.position + CameraHeight;
             _camera.LookAt(transform);
         }
             _frontPivot = transform.Find("frontPivot");
@@ -68,6 +68,6 @@ public class DogController : NetworkBehaviour
         {
             return;
         }
-		_camera.position = transform.position + new Vector3(0,20,0);
+		_camera.position = transform.position + CameraHeight;
 	}
 }

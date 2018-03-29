@@ -352,7 +352,7 @@ MonoBehaviour:
   DogMat0: {fileID: 0}
   DogMat1: {fileID: 0}
   DogMat2: {fileID: 0}
-  splatScale: 3
+  splatScale: 6
 --- !u!135 &135130352921309542
 SphereCollider:
   m_ObjectHideFlags: 1
