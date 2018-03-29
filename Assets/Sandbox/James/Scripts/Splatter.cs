@@ -19,6 +19,7 @@ public class Splatter : NetworkBehaviour
     private int splatsY = 1;
     private Transform _emitter;
 
+    [SyncVar]
     private Vector4 channelMask = new Vector4(0, 0, 0, 1);
 
     private List<Vector4> splatColors = new List<Vector4>();
@@ -119,39 +120,7 @@ public class Splatter : NetworkBehaviour
 
         SplatManager.SendColorsToRenderer();
 
-        GameObject[] p = GameObject.FindGameObjectsWithTag("Player");
-        Debug.Log(p.Length + " Players found.");
-        for (int j = 0; j < p.Length; j++)
-        {
-            if (p[j] != null)
-            {
-                Splatter s = p[j].GetComponent<Splatter>();
-                if (s != null && s.channelMask != SplatChannel.MAN)
-                {
-                    if (s.channelMask == SplatChannel.DOG0)
-                    {
-                        p[j].transform.GetChild(0).GetComponent<Renderer>()
-                            .material = DogMat0;
-                        p[j].transform.GetChild(0).GetComponent<Renderer>()
-                            .material.color = SplatManagerSystem.instance.Colors[0];
-                    }
-                    if (s.channelMask == SplatChannel.DOG1)
-                    {
-                        p[j].transform.GetChild(0).GetComponent<Renderer>()
-                            .material = DogMat1;
-                        p[j].transform.GetChild(0).GetComponent<Renderer>()
-                            .material.color = SplatManagerSystem.instance.Colors[1];
-                    }
-                    if (s.channelMask == SplatChannel.DOG2)
-                    {
-                        p[j].transform.GetChild(0).GetComponent<Renderer>()
-                            .material = DogMat2;
-                        p[j].transform.GetChild(0).GetComponent<Renderer>()
-                            .material.color = SplatManagerSystem.instance.Colors[2];
-                    }
-                }
-            }
-        }
+        SetDogColors();
     }
 
 
@@ -192,56 +161,60 @@ public class Splatter : NetworkBehaviour
         return true;
     }
 
+    void SetDogColors(){
+        GameObject[] p = GameObject.FindGameObjectsWithTag("Player");
+        Debug.Log(p.Length + " Players found.");
+        for (int j = 0; j < p.Length; j++)
+        {
+            if (p[j] != null)
+            {
+                Debug.Log("Player " + j);
+                Splatter s = p[j].GetComponent<Splatter>();
+                if (s != null && s.channelMask != SplatChannel.MAN)
+                {
+                    Debug.Log("Player " + j + "is a dog");
+                    Renderer r = p[j].transform.GetChild(0).GetComponent<Renderer>();
+                            
+                    if (s.channelMask == SplatChannel.DOG0)
+                    {
+                        Debug.Log("Player " + j + "is a dog 0");
+                        r.material = DogMat0;
+                        r.material.color = SplatManagerSystem.instance.Colors[0];
+                        Debug.Log(r.material.color);
+                    }
+                    if (s.channelMask == SplatChannel.DOG1)
+                    {
+                        Debug.Log("Player " + j + "is a dog 1");
+                        r.material = DogMat1;
+                        r.material.color = SplatManagerSystem.instance.Colors[1];
+                        Debug.Log(r.material.color);
+                    }
+                    if (s.channelMask == SplatChannel.DOG2)
+                    {
+                        Debug.Log("Player " + j + "is a dog 2");
+                        r.material = DogMat2;
+                        r.material.color = SplatManagerSystem.instance.Colors[2];
+                        Debug.Log(r.material.color);
+                    }
+                }
+            }
+        }
+    }
+
     void Start()
     {
         if (isServer)
         {
             splatters.Add(GetComponent<Splatter>(), GetComponent<Drinker>());
             NetworkServer.RegisterHandler(RequestDogColorsMsgId, OnDogColorsRequested);
+       
+            SplatManagerSystem.instance.Colors = splatColors;
+            SetDogColors();
         }
         else
         {
             GetComponent<NetworkBehaviour>().connectionToServer.RegisterHandler(DogColorsMsgId, OnDogColorsReceived);
-        }
-        if (isServer)
-        {
-            SplatManagerSystem.instance.Colors = splatColors;
-            GameObject[] p = GameObject.FindGameObjectsWithTag("Player");
-            Debug.Log(p.Length + " Players found.");
-            for (int j = 0; j < p.Length; j++)
-            {
-                if (p[j] != null)
-                {
-                    Splatter s = p[j].GetComponent<Splatter>();
-                    if (s != null && s.channelMask != SplatChannel.MAN)
-                    {
-                        if (s.channelMask == SplatChannel.DOG0)
-                        {
-                            p[j].transform.GetChild(0).GetComponent<Renderer>()
-                                .material = DogMat0;
-                            p[j].transform.GetChild(0).GetComponent<Renderer>()
-                                .material.color = SplatManagerSystem.instance.Colors[0];
-                        }
-                        if (s.channelMask == SplatChannel.DOG1)
-                        {
-                            p[j].transform.GetChild(0).GetComponent<Renderer>()
-                                .material = DogMat1;
-                            p[j].transform.GetChild(0).GetComponent<Renderer>()
-                                .material.color = SplatManagerSystem.instance.Colors[1];
-                        }
-                        if (s.channelMask == SplatChannel.DOG2)
-                        {   
-                            p[j].transform.GetChild(0).GetComponent<Renderer>()
-                                .material = DogMat2;
-                            p[j].transform.GetChild(0).GetComponent<Renderer>()
-                                .material.color = SplatManagerSystem.instance.Colors[2];
-                        }
-                    }
-                }
-            }
-        }
-        else
-        {
+        
             RequestDogColorsMsg msg = new RequestDogColorsMsg();
             msg.hi = "hi";
             GetComponent<NetworkBehaviour>().connectionToServer.Send(RequestDogColorsMsgId, msg);
