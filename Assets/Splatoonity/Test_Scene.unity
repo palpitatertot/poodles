@@ -594,6 +594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3deb21e270cdcfd4dafe1fb47e5d0172, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  UI: {fileID: 0}
   sizeX: 1024
   sizeY: 1024
   splatTexture: {fileID: 2800000, guid: 9441cb4c3b8903c479f080efb0bd26fb, type: 3}
