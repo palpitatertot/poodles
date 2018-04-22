@@ -20,6 +20,7 @@ public class DogController : NetworkBehaviour
     Vector4 _splatChannel = new Vector4(1, 0, 0, 0);
     private Splatter _emitter;
     private Animator _animator;
+	private bool spawnCamera;
 
 	void Start()
 	{
@@ -29,7 +30,7 @@ public class DogController : NetworkBehaviour
         RearPeePoofs.transform.position = _rearPivot.transform.position;
         _front = GetComponent<Rigidbody>();
         //_animator = this.GetComponentInChildren<Animator>();
-
+		spawnCamera = false;
 
         if (isLocalPlayer)
         {
@@ -40,6 +41,7 @@ public class DogController : NetworkBehaviour
             _emitter = GetComponent<Splatter>();
             _emitter.SetEmitter(transform.Find("rearPivot"));
             _emitter.SetChannel(_splatChannel);
+
         }
 	}
 
@@ -80,7 +82,9 @@ public class DogController : NetworkBehaviour
         {
             return;
         }
-		_camera.position = transform.position + CameraHeight;
+
+		if(!spawnCamera)
+			_camera.position = transform.position + CameraHeight;
 	}
 
     void DoPeePoofs()
@@ -96,4 +100,15 @@ public class DogController : NetworkBehaviour
     {
         RearPeePoofs.Stop();   
     }
+
+	void RaiseCamera()
+	{
+		spawnCamera = true;
+		_camera.position = transform.position + CameraHeight * 2;
+	}
+
+	void LowerCamera()
+	{
+		spawnCamera = false;
+	}
 }
