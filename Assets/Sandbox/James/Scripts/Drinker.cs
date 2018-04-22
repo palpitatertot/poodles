@@ -18,7 +18,7 @@ public class Drinker : NetworkBehaviour {
 	}
 
 	public void OnWaterChanged(int amount){
-        Debug.Log("Dranking level is " + WaterLevel);
+       // Debug.Log("Dranking level is " + WaterLevel);
         if (isLocalPlayer) menu.updateWaterLevel((float)WaterLevel/WaterMax);
         // insert UI Hook
     }
