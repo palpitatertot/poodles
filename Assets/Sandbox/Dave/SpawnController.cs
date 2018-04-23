@@ -13,7 +13,7 @@ public class SpawnController : NetworkBehaviour {
 
 	public Image fadeImage;
 
-	private DogController cController;
+	private InputHandler _inputH;
 	private Color fadeImageColor;
 
 
@@ -31,7 +31,7 @@ public class SpawnController : NetworkBehaviour {
 
 		fadeImageColor = fadeImage.color;
 
-		cController = transform.GetComponent<DogController> ();
+		_inputH = GetComponent<InputHandler> ();
 
 	}
 	
@@ -46,12 +46,12 @@ public class SpawnController : NetworkBehaviour {
 	{
 		Debug.Log ("Entering Do Fade Out");
 		StartCoroutine (FadeOutIn ());
-		fadeUI.SetActive (false);
 		Debug.Log ("Leaving Do Fade In");
 	}
 
 	IEnumerator FadeOutIn()
 	{
+		_inputH.setSpawning (true);
 		fadeUI.SetActive (true);
 		waterLevelUI.SetActive (false);
 		Debug.Log ("Color Alpha Before = " + fadeUI.GetComponent<Image>().color.a + "\n");
@@ -71,6 +71,7 @@ public class SpawnController : NetworkBehaviour {
 
 		waterLevelUI.SetActive (true);
 		fadeUI.SetActive (false);
+		_inputH.setSpawning (false);
 
 		yield return null;
 	}

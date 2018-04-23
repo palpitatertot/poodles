@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
-public class pauseMenu : NetworkBehaviour
+public class pauseMenu : MonoBehaviour
 {
 	public Text winnerText;
 	public Text MessText;
@@ -24,7 +24,6 @@ public class pauseMenu : NetworkBehaviour
     public Image p2Score;
     public Image p3Score;
 	public Image waterLevel;
-
 
 
 	int numPlayers;

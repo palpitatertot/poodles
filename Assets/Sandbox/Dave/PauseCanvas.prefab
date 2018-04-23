@@ -775,11 +775,9 @@ MonoBehaviour:
   pauseMenuUI: {fileID: 0}
   scoreMenuUI: {fileID: 0}
   waterLevelUI: {fileID: 0}
-  fadeUI: {fileID: 0}
   p1Score: {fileID: 0}
   p2Score: {fileID: 0}
   p3Score: {fileID: 0}
-  fadeImage: {fileID: 0}
   waterLevel: {fileID: 0}
 --- !u!114 &114808530289045686
 MonoBehaviour:

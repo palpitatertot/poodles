@@ -20,7 +20,9 @@ public class DogController : NetworkBehaviour
     Vector4 _splatChannel = new Vector4(1, 0, 0, 0);
     private Splatter _emitter;
     private Animator _animator;
-	private bool spawnCamera;
+
+	private InputHandler _inputH;
+	private dogInput _inputD;
 
 	void Start()
 	{
@@ -30,7 +32,7 @@ public class DogController : NetworkBehaviour
         RearPeePoofs.transform.position = _rearPivot.transform.position;
         _front = GetComponent<Rigidbody>();
         //_animator = this.GetComponentInChildren<Animator>();
-		spawnCamera = false;
+		_inputH = GetComponent<InputHandler>();
 
         if (isLocalPlayer)
         {
@@ -51,16 +53,23 @@ public class DogController : NetworkBehaviour
 		{
 			return;
 		}
-		fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
-		fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
-		rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
-		rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
+
+		_inputD = _inputH.getInputData ();
+
+		//fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
+		//fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
+		//rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
+		//rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
         //_animator.SetFloat("Velocity", _front.velocity.magnitude);
         //Debug.Log(_animator.GetFloat("Velocity"));
-		if (Input.GetKey(KeyCode.Space))
-		{
-			_emitter.Splat();
-		}
+		//if (Input.GetKey(KeyCode.Space))
+		//{
+		//	_emitter.Splat();
+		//}
+
+		if (_inputD.splat)
+			_emitter.Splat ();
+
         if (_front.velocity.magnitude > 1){
             DoPeePoofs();
         } else {
@@ -69,10 +78,10 @@ public class DogController : NetworkBehaviour
 	}
 
 	void FixedUpdate(){        
-		_front.AddForceAtPosition(transform.forward * fz, _frontPivot.position, ForceMode.Impulse);
-		_front.AddForceAtPosition(transform.right * fx, _frontPivot.position, ForceMode.Impulse);
-		_front.AddForceAtPosition(transform.forward * rz, _rearPivot.position, ForceMode.Impulse);
-		_front.AddForceAtPosition(transform.right * rx, _rearPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.forward * _inputD.fz, _frontPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.right * _inputD.fx, _frontPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.forward * _inputD.rz, _rearPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.right * _inputD.rx, _rearPivot.position, ForceMode.Impulse);
 
 	}
 
@@ -82,9 +91,8 @@ public class DogController : NetworkBehaviour
         {
             return;
         }
-
-		if(!spawnCamera)
-			_camera.position = transform.position + CameraHeight;
+			
+		_camera.position = transform.position + CameraHeight;
 	}
 
     void DoPeePoofs()
@@ -100,15 +108,5 @@ public class DogController : NetworkBehaviour
     {
         RearPeePoofs.Stop();   
     }
-
-	void RaiseCamera()
-	{
-		spawnCamera = true;
-		_camera.position = transform.position + CameraHeight * 2;
-	}
-
-	void LowerCamera()
-	{
-		spawnCamera = false;
-	}
+		
 }
