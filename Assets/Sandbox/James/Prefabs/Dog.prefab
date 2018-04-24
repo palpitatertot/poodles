@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 114337471180294290}
   - component: {fileID: 114845374921774498}
   - component: {fileID: 114308710696588984}
+  - component: {fileID: 114486147490091132}
   m_Layer: 0
   m_Name: Dog
   m_TagString: Player
@@ -303,6 +304,8 @@ MonoBehaviour:
   waterLevelUI: {fileID: 0}
   UICanvas: {fileID: 0}
   fadeImage: {fileID: 0}
+  i: 0
+  j: 0
 --- !u!114 &114337471180294290
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -351,6 +354,17 @@ MonoBehaviour:
   WaterMax: 1000
   PeeCost: 3
   menu: {fileID: 0}
+--- !u!114 &114486147490091132
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1106694524284286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1af1ef09e10f641ffaa708e069c181fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114844591384740236
 MonoBehaviour:
   m_ObjectHideFlags: 1
