@@ -17,9 +17,10 @@ public class SpawnController : NetworkBehaviour {
 	private InputHandler _inputH;
 	private Color _fadeColor;
 	private DogController _dControl;
+	private CameraController _cControl;
 	private bool _selecting;
 	private GameObject[] spawnLocations;
-	GameObject selectedLocation;
+	private GameObject selectedLocation;
 	public int i, j;
 
 
@@ -38,12 +39,14 @@ public class SpawnController : NetworkBehaviour {
 		_inputH = GetComponent<InputHandler> ();
 		_cam = GetComponentInChildren<Camera> ();
 		_dControl = GetComponent<DogController>();
+		_cControl = GetComponent<CameraController> ();
 
 		spawnLocations = GameObject.FindGameObjectsWithTag ("respawnLocations");
-		Debug.Log ("SPawn Location length: " + spawnLocations.Length);
 		i = 0;
+		selectedLocation = spawnLocations[i];
+		selectedLocation.GetComponent<Renderer>().material.color = Color.red;
 
-		hideSpawnLocations ();
+		//_cControl.hideSpawnLocations ();
 
 	}
 	
@@ -54,21 +57,19 @@ public class SpawnController : NetworkBehaviour {
 		}
 
 		if (Input.GetKeyDown (KeyCode.O)) {
-			showSpawnLocations ();
+			_cControl.showSpawnLocations ();
 		}
 		if (Input.GetKeyUp (KeyCode.O)) {
-			hideSpawnLocations ();
+			_cControl.hideSpawnLocations ();
 		}
 
 		if (_selecting) {
-			//Debug.Log ("In while loop");
 			if(Input.GetKeyDown(KeyCode.D))
 			{
 				j = i;
 				i = i + 1;
 				if (i > spawnLocations.Length - 1)
 					i = 0;
-				//Debug.Log ("I from D: " + i);
 				selectedLocation = spawnLocations[i];
 				selectedLocation.GetComponent<Renderer>().material.color = Color.red;
 				spawnLocations[j].GetComponent<Renderer>().material.color = Color.white;
@@ -80,7 +81,6 @@ public class SpawnController : NetworkBehaviour {
 				i = i - 1;
 				if (i < 0)
 					i = spawnLocations.Length - 1;
-				//Debug.Log ("I from A: " + i);
 				selectedLocation = spawnLocations[i];
 				selectedLocation.GetComponent<Renderer>().material.color = Color.red;
 				spawnLocations [j].GetComponent<Renderer>().material.color = Color.white;
@@ -106,18 +106,18 @@ public class SpawnController : NetworkBehaviour {
 		fadeUI.SetActive (true);
 		waterLevelUI.SetActive (false);
 
-		//Debug.Log ("Color Alpha Before = " + fadeUI.GetComponent<Image>().color.a + "\n");
+		//Fade To Black
 		while (_fadeColor.a < 1) {
 			_fadeColor.a += Time.deltaTime;
 			fadeImage.color = _fadeColor;
 			yield return null;
 		}
-		//Debug.Log ("Color Alpha After = " + fadeUI.GetComponent<Image>().color.a + "\n");
-
-		showSpawnLocations ();
-		_dControl.setSpawnCameraHeight (true);
+			
+		_cControl.showSpawnLocations ();
+		_cControl.setSpawnCameraHeight (true);
 		yield return new WaitForSeconds (1.5f);
 
+		//Fade From Black
 		while (_fadeColor.a > 0) {
 			_fadeColor.a -= Time.deltaTime;
 			fadeImage.color = _fadeColor;
@@ -130,30 +130,21 @@ public class SpawnController : NetworkBehaviour {
 			yield return null;
 		
 		}
-			
-		Debug.Log ("Out of Whiel LOOP");
+
+		_cControl.beginLerp (selectedLocation.transform.position + new Vector3 (0, 35, 0));
+		_dControl.moveDog (selectedLocation.transform.position - new Vector3(0,5,0));
+		_cControl.setSpawnCameraHeight (false);
 
 		waterLevelUI.SetActive (true);
 		fadeUI.SetActive (false);
 
-		yield return new WaitForSeconds (1.0f);
-		_dControl.setSpawnCameraHeight (false);
-		hideSpawnLocations ();
+		_cControl.hideSpawnLocations ();
 		_inputH.setSpawning (false);
 
 		yield return null;
 	}
 
 
-	void showSpawnLocations()
-	{
-		Debug.Log(_cam.cullingMask);
-		_cam.cullingMask = _cam.cullingMask | (1 << 8);
-	}
 
-	void hideSpawnLocations()
-	{
-		_cam.cullingMask = _cam.cullingMask & ~(1 << 8);
-	}
 
 }

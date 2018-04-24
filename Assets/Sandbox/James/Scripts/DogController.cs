@@ -10,9 +10,8 @@ public class DogController : NetworkBehaviour
 	public float FrontTurnSpeed;
 	public float RearTurnSpeed;
 	public float MouseSpeed;
-	public Vector3 CameraHeight;
-	private Vector3 _originalCamHeight = new Vector3(0,35,0);
-	private Transform _camera;
+
+
 	private Transform _frontPivot;
 	private Transform _rearPivot;
 	private Rigidbody _front;
@@ -25,6 +24,7 @@ public class DogController : NetworkBehaviour
 	private InputHandler _inputH;
 	private dogInput _inputD;
 
+
 	void Start()
 	{
         _frontPivot = transform.Find("frontPivot");
@@ -34,14 +34,11 @@ public class DogController : NetworkBehaviour
         _front = GetComponent<Rigidbody>();
         //_animator = this.GetComponentInChildren<Animator>();
 		_inputH = GetComponent<InputHandler>();
-		CameraHeight = _originalCamHeight;
+
 
         if (isLocalPlayer)
         {
-            _camera = Camera.allCameras[0].transform;
-            _camera.SetParent(transform);
-            _camera.position = transform.position + CameraHeight;
-            _camera.LookAt(transform);
+           
             _emitter = GetComponent<Splatter>();
             _emitter.SetEmitter(transform.Find("rearPivot"));
             _emitter.SetChannel(_splatChannel);
@@ -87,15 +84,13 @@ public class DogController : NetworkBehaviour
 
 	}
 
-	void LateUpdate()
+	/*void LateUpdate()
 	{
         if(!isLocalPlayer)
         {
             return;
         }
-			
-		_camera.position = transform.position + CameraHeight;
-	}
+	}*/
 
     void DoPeePoofs()
     {
@@ -110,14 +105,11 @@ public class DogController : NetworkBehaviour
     {
         RearPeePoofs.Stop();   
     }
-
+		
 	public
-	void setSpawnCameraHeight(bool spawn)
+	void moveDog(Vector3 moveLocation)
 	{
-		if (spawn)
-			CameraHeight = new Vector3 (0, 70, 0);
-		else
-			CameraHeight = _originalCamHeight;
+		if(isServer) transform.position = moveLocation;
 	}
 		
 }

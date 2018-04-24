@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 114337471180294290}
   - component: {fileID: 114845374921774498}
   - component: {fileID: 114308710696588984}
+  - component: {fileID: 114951039855830072}
   m_Layer: 0
   m_Name: Dog
   m_TagString: Player
@@ -303,6 +304,8 @@ MonoBehaviour:
   waterLevelUI: {fileID: 0}
   UICanvas: {fileID: 0}
   fadeImage: {fileID: 0}
+  i: 0
+  j: 0
 --- !u!114 &114337471180294290
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -387,6 +390,18 @@ MonoBehaviour:
   RearRunSpeed: 50
   FrontTurnSpeed: 10
   RearTurnSpeed: 20
+--- !u!114 &114951039855830072
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1106694524284286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad50de369d07d2f4ebe4566d71a27ef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CameraHeight: {x: 0, y: 0, z: 0}
 --- !u!114 &114991199195751864
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -405,7 +420,6 @@ MonoBehaviour:
   FrontTurnSpeed: 10
   RearTurnSpeed: 20
   MouseSpeed: 0
-  CameraHeight: {x: 0, y: 35, z: 0}
 --- !u!136 &136770140396940436
 CapsuleCollider:
   m_ObjectHideFlags: 1
