@@ -10,7 +10,8 @@ public class DogController : NetworkBehaviour
 	public float FrontTurnSpeed;
 	public float RearTurnSpeed;
 	public float MouseSpeed;
-    public Vector3 CameraHeight = new Vector3(0, 35, 0);
+	public Vector3 CameraHeight;
+	private Vector3 _originalCamHeight = new Vector3(0,35,0);
 	private Transform _camera;
 	private Transform _frontPivot;
 	private Transform _rearPivot;
@@ -33,6 +34,7 @@ public class DogController : NetworkBehaviour
         _front = GetComponent<Rigidbody>();
         //_animator = this.GetComponentInChildren<Animator>();
 		_inputH = GetComponent<InputHandler>();
+		CameraHeight = _originalCamHeight;
 
         if (isLocalPlayer)
         {
@@ -108,5 +110,14 @@ public class DogController : NetworkBehaviour
     {
         RearPeePoofs.Stop();   
     }
+
+	public
+	void setSpawnCameraHeight(bool spawn)
+	{
+		if (spawn)
+			CameraHeight = new Vector3 (0, 70, 0);
+		else
+			CameraHeight = _originalCamHeight;
+	}
 		
 }

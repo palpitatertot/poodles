@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Catcher
   - Grabbable
+  - respawnLocations
   layers:
   - Default
   - TransparentFX
