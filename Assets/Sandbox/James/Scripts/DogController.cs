@@ -101,7 +101,30 @@ public class DogController : NetworkBehaviour
 	public
 	void moveDog(Vector3 moveLocation)
 	{
-		if(isServer) transform.position = moveLocation;
+        if(isServer){
+            _moveDog(moveLocation);
+            RpcMoveDog(moveLocation);
+        }
+        else {
+            CmdMoveDog(moveLocation);
+            RpcMoveDog(moveLocation);
+        }
 	}
-		
+
+    void _moveDog(Vector3 moveLocation)
+    {
+        transform.position = moveLocation;
+        transform.rotation = Quaternion.identity;
+    }
+
+    [ClientRpc]
+    void RpcMoveDog(Vector3 moveLocation){
+        _moveDog(moveLocation);
+    }
+
+    [Command]
+    void CmdMoveDog(Vector3 moveLocation){
+        _moveDog(moveLocation);
+        RpcMoveDog(moveLocation);
+    }
 }
