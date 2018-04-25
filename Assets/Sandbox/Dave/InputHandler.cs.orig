@@ -30,6 +30,7 @@ public class InputHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+<<<<<<< HEAD
          _sfx = GetComponents<AudioSource>();
     }
 	
@@ -62,6 +63,7 @@ public class InputHandler : MonoBehaviour {
             //    _sfx[4].Stop();
             //}
 
+
             //  if (isMoving())
             //  {
             //      if(!_startWalking)
@@ -80,7 +82,7 @@ public class InputHandler : MonoBehaviour {
 
             //if (Input.GetKeyDown(KeyCode.Space)) //pee sounds
             //{
-            //    _sfx[4].pitch = Random.Range(1.0f, 1.2f); //ee sounds
+            //    _sfx[4].pitch = Random.Range(1.0f, 1.2f); //pee sounds
             //    //_sfx[4].PlayOneShot(_sfx[4].clip);
             //    _sfx[4].Play();
             //}
@@ -102,7 +104,7 @@ public class InputHandler : MonoBehaviour {
 			dInput.rx = 0;
 			dInput.rz = 0;
 			dInput.splat = false;
-
+=======
         _spawning = false;
         _held = false;
 	}
@@ -146,7 +148,7 @@ public class InputHandler : MonoBehaviour {
             {
                 dInput.splat = false;
             }
-
+>>>>>>> 018d56633515145cd59def090311bc5b8329eb4e
 		}
 	}
 

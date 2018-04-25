@@ -4,8 +4,6 @@ using UnityEngine;
 using UnityEngine.Networking;
 
 public class Grabbable : NetworkBehaviour {
-
-    
     
 	// Use this for initialization
 	void Start () {

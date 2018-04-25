@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -53,7 +53,7 @@ public class SpawnController : NetworkBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.P)) {
-			DoFade ();
+			BeginRespawn ();
 		}
 
 		if (Input.GetKeyDown (KeyCode.O)) {
@@ -64,7 +64,12 @@ public class SpawnController : NetworkBehaviour {
 		}
 
 		if (_selecting) {
+<<<<<<< HEAD
+			//Debug.Log ("In while loop");
+            if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
+=======
 			if(Input.GetKeyDown(KeyCode.D))
+>>>>>>> fcd4fff8f6fa653f71be7317660f6e7dc76d49d0
 			{
 				j = i;
 				i = i + 1;
@@ -75,7 +80,7 @@ public class SpawnController : NetworkBehaviour {
 				spawnLocations[j].GetComponent<Renderer>().material.color = Color.white;
 			}
 
-			else if(Input.GetKeyDown(KeyCode.A))
+            else if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
 			{
 				j = i;
 				i = i - 1;
@@ -93,7 +98,7 @@ public class SpawnController : NetworkBehaviour {
 		}
 	}
 
-	public void DoFade()
+	public void BeginRespawn()
 	{
 
 		StartCoroutine (FadeOutIn ());
@@ -112,11 +117,9 @@ public class SpawnController : NetworkBehaviour {
 			fadeImage.color = _fadeColor;
 			yield return null;
 		}
-
+			
 		_cControl.showSpawnLocations ();
-        // NEED TO HIDE DOG
-        _dControl.moveDog(new Vector3(0, -10f, 0));
-		_cControl.setSpawnCamera(true);
+		_cControl.setSpawnCameraHeight (true);
 		yield return new WaitForSeconds (1.5f);
 
 		//Fade From Black
@@ -135,7 +138,7 @@ public class SpawnController : NetworkBehaviour {
 
 		_cControl.beginLerp (selectedLocation.transform.position + new Vector3 (0, 35, 0));
 		_dControl.moveDog (selectedLocation.transform.position - new Vector3(0,5,0));
-		_cControl.setSpawnCamera (false);
+		_cControl.setSpawnCameraHeight (false);
 
 		waterLevelUI.SetActive (true);
 		fadeUI.SetActive (false);
