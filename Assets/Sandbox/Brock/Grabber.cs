@@ -129,8 +129,7 @@ public class Grabber : NetworkBehaviour {
 	void Update () {
 
 		if (Input.GetKeyDown (KeyCode.E) && !hasObject && inRange) {
-            Grab();
-			
+            Grab();			
 		} else if (Input.GetKeyDown (KeyCode.E) && hasObject) {
             Release();
 		}

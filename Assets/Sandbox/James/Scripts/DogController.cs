@@ -24,6 +24,7 @@ public class DogController : NetworkBehaviour
 	private InputHandler _inputH;
 	private dogInput _inputD;
 
+    private AudioSource[] _sfx;
 
 	void Start()
 	{
@@ -34,6 +35,7 @@ public class DogController : NetworkBehaviour
         _front = GetComponent<Rigidbody>();
         //_animator = this.GetComponentInChildren<Animator>();
 		_inputH = GetComponent<InputHandler>();
+        _sfx = GetComponents<AudioSource>(); 
 
 
         if (isLocalPlayer)
@@ -55,6 +57,11 @@ public class DogController : NetworkBehaviour
 
 		_inputD = _inputH.getInputData ();
 
+        if (Input.GetKey(KeyCode.F)) //bark
+        {
+            PlaySound(_sfx[0]);
+        }
+
 		//fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
 		//fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
 		//rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
@@ -67,12 +74,44 @@ public class DogController : NetworkBehaviour
 		//}
 
 		if (_inputD.splat)
+        {
 			_emitter.Splat ();
+            if (!_sfx[4].isPlaying)
+            {
+                _sfx[4].pitch = Random.Range(1.0f, 1.2f);
+                _sfx[4].Play();
+            }
+        }
+        else
+        {
+            if (_sfx[4].isPlaying)
+            {
+                _sfx[4].Stop();                
+            }
+        }
 
-        if (_front.velocity.magnitude > 1){
+        if (_front.velocity.magnitude > 1)
+        {
             DoPeePoofs();
-        } else {
+            if (!_sfx[2].isPlaying)
+            {
+                _sfx[2].pitch = Random.Range(1.0f, 1.2f); //walking sounds
+                _sfx[2].Play();
+            }
+        }
+        else
+        {
+            if (_sfx[2].isPlaying)
+            {
+                _sfx[2].Stop();
+            }
+
             StopPeePoofs();
+        }
+
+        if (!Input.anyKey)
+        {
+            _sfx[2].Stop();
         }
 	}
 
@@ -84,13 +123,19 @@ public class DogController : NetworkBehaviour
 
 	}
 
-	/*void LateUpdate()
+    /*void LateUpdate()
 	{
         if(!isLocalPlayer)
         {
             return;
         }
 	}*/
+
+    private void PlaySound(AudioSource source)
+    {
+        source.pitch = Random.Range(1.0f, 1.2f);
+        source.Play();
+    }
 
     void DoPeePoofs()
     {
