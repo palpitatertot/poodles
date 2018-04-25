@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Networking;
 
-public class pauseMenu : NetworkBehaviour
+public class pauseMenu : MonoBehaviour
 {
 	public Text winnerText;
 	public Text MessText;
@@ -19,17 +19,18 @@ public class pauseMenu : NetworkBehaviour
     public GameObject scoreMenuUI;
     public GameObject waterLevelUI;
 
+
     public Image p1Score;
     public Image p2Score;
     public Image p3Score;
+	public Image waterLevel;
+
 
 	int numPlayers;
 
-    public Image waterLevel;
-
     void Start()
     {
-        pauseMenuUI = transform.GetChild(0).gameObject;
+		pauseMenuUI = transform.GetChild(0).gameObject;
 		pauseMenuUI.SetActive (false);
         scoreMenuUI = transform.GetChild(1).gameObject;
 		scoreMenuUI.SetActive (false);
@@ -71,6 +72,8 @@ public class pauseMenu : NetworkBehaviour
         {
             ShowTabScore();
         }
+
+
     }
 
     void Pause()
@@ -155,7 +158,7 @@ public class pauseMenu : NetworkBehaviour
 		scoreMenuUI.SetActive (true);
 
 	}
-
+		
 	IEnumerator updateTime()
 	{
 		//yield return new WaitForEndOfFrame ();
@@ -168,5 +171,4 @@ public class pauseMenu : NetworkBehaviour
 			yield return new WaitForSeconds (1.0f);
 		}
 	}
-
 }

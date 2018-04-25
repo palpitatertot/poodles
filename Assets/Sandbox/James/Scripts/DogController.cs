@@ -10,8 +10,8 @@ public class DogController : NetworkBehaviour
 	public float FrontTurnSpeed;
 	public float RearTurnSpeed;
 	public float MouseSpeed;
-    public Vector3 CameraHeight = new Vector3(0, 35, 0);
-	private Transform _camera;
+
+
 	private Transform _frontPivot;
 	private Transform _rearPivot;
 	private Rigidbody _front;
@@ -21,6 +21,10 @@ public class DogController : NetworkBehaviour
     private Splatter _emitter;
     private Animator _animator;
 
+	private InputHandler _inputH;
+	private dogInput _inputD;
+
+
 	void Start()
 	{
         _frontPivot = transform.Find("frontPivot");
@@ -29,17 +33,16 @@ public class DogController : NetworkBehaviour
         RearPeePoofs.transform.position = _rearPivot.transform.position;
         _front = GetComponent<Rigidbody>();
         //_animator = this.GetComponentInChildren<Animator>();
+		_inputH = GetComponent<InputHandler>();
 
 
         if (isLocalPlayer)
         {
-            _camera = Camera.allCameras[0].transform;
-            _camera.SetParent(transform);
-            _camera.position = transform.position + CameraHeight;
-            _camera.LookAt(transform);
+           
             _emitter = GetComponent<Splatter>();
             _emitter.SetEmitter(transform.Find("rearPivot"));
             _emitter.SetChannel(_splatChannel);
+
         }
 	}
 
@@ -49,16 +52,23 @@ public class DogController : NetworkBehaviour
 		{
 			return;
 		}
-		fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
-		fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
-		rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
-		rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
+
+		_inputD = _inputH.getInputData ();
+
+		//fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
+		//fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
+		//rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
+		//rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
         //_animator.SetFloat("Velocity", _front.velocity.magnitude);
         //Debug.Log(_animator.GetFloat("Velocity"));
-		if (Input.GetKey(KeyCode.Space))
-		{
-			_emitter.Splat();
-		}
+		//if (Input.GetKey(KeyCode.Space))
+		//{
+		//	_emitter.Splat();
+		//}
+
+		if (_inputD.splat)
+			_emitter.Splat ();
+
         if (_front.velocity.magnitude > 1){
             DoPeePoofs();
         } else {
@@ -67,21 +77,20 @@ public class DogController : NetworkBehaviour
 	}
 
 	void FixedUpdate(){        
-		_front.AddForceAtPosition(transform.forward * fz, _frontPivot.position, ForceMode.Impulse);
-		_front.AddForceAtPosition(transform.right * fx, _frontPivot.position, ForceMode.Impulse);
-		_front.AddForceAtPosition(transform.forward * rz, _rearPivot.position, ForceMode.Impulse);
-		_front.AddForceAtPosition(transform.right * rx, _rearPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.forward * _inputD.fz, _frontPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.right * _inputD.fx, _frontPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.forward * _inputD.rz, _rearPivot.position, ForceMode.Impulse);
+		_front.AddForceAtPosition(transform.right * _inputD.rx, _rearPivot.position, ForceMode.Impulse);
 
 	}
 
-	void LateUpdate()
+	/*void LateUpdate()
 	{
         if(!isLocalPlayer)
         {
             return;
         }
-		_camera.position = transform.position + CameraHeight;
-	}
+	}*/
 
     void DoPeePoofs()
     {
@@ -96,4 +105,11 @@ public class DogController : NetworkBehaviour
     {
         RearPeePoofs.Stop();   
     }
+		
+	public
+	void moveDog(Vector3 moveLocation)
+	{
+		if(isServer) transform.position = moveLocation;
+	}
+		
 }
