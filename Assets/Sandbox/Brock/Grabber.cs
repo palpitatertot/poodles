@@ -41,6 +41,10 @@ public class Grabber : NetworkBehaviour {
         go.GetComponent<Rigidbody>().isKinematic = true;
         go.GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
         go.transform.GetChild(0).gameObject.GetComponent<Collider>().enabled = false;
+        InputHandler ih = go.GetComponent<InputHandler>();
+        if (ih){
+            ih.setHeld(true);
+        }
         hasObject = true;
     }
 
@@ -66,6 +70,11 @@ public class Grabber : NetworkBehaviour {
         go.transform.GetChild(0).GetComponent<Collider>().enabled = true;
         go.gameObject.transform.SetParent(null);
         hasObject = false;
+        InputHandler ih = go.GetComponent<InputHandler>();
+        if (ih)
+        {
+            ih.setHeld(false);
+        }
     }
 
     void Release(){

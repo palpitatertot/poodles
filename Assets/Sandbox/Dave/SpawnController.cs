@@ -50,7 +50,7 @@ public class SpawnController : NetworkBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown (KeyCode.P)) {
-			DoFade ();
+			BeginRespawn ();
 		}
 
 		if (Input.GetKeyDown (KeyCode.O)) {
@@ -62,7 +62,7 @@ public class SpawnController : NetworkBehaviour {
 
 		if (_selecting) {
 			//Debug.Log ("In while loop");
-			if(Input.GetKeyDown(KeyCode.D))
+            if(Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
 			{
 				j = i;
 				i = i + 1;
@@ -74,7 +74,7 @@ public class SpawnController : NetworkBehaviour {
 				spawnLocations[j].GetComponent<Renderer>().material.color = Color.white;
 			}
 
-			else if(Input.GetKeyDown(KeyCode.A))
+            else if(Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
 			{
 				j = i;
 				i = i - 1;
@@ -93,7 +93,7 @@ public class SpawnController : NetworkBehaviour {
 		}
 	}
 
-	public void DoFade()
+	public void BeginRespawn()
 	{
 
 		StartCoroutine (FadeOutIn ());

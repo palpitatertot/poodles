@@ -22,30 +22,53 @@ public class InputHandler : MonoBehaviour {
 	private dogInput dInput;
 
 	private bool _spawning;
+    private bool _held;
 
 	// Use this for initialization
 	void Start () {
+        _spawning = false;
+        _held = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (!_spawning) {
-			dInput.fx = Input.GetAxis ("Horizontal") * FrontTurnSpeed * Time.deltaTime;
-			dInput.fz = Input.GetAxis ("Vertical") * FrontRunSpeed * Time.deltaTime;
-			dInput.rx = Input.GetAxis ("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
-			dInput.rz = Input.GetAxis ("Vertical2") * FrontRunSpeed * Time.deltaTime;
+        if (_spawning)
+        {
+            dInput.fx = 0;
+            dInput.fz = 0;
+            dInput.rx = 0;
+            dInput.rz = 0;
+            dInput.splat = false;
+        }
+        else if (_held)
+        {
+            dInput.fx = 0;
+            dInput.fz = 0;
+            dInput.rx = 0;
+            dInput.rz = 0;
+            if (Input.GetKey(KeyCode.Space))
+            {
+                dInput.splat = true;
+            }
+            else
+            {
+                dInput.splat = false;
+            }
+        }
+        else {
+            dInput.fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
+            dInput.fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
+            dInput.rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
+            dInput.rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
 
-			if (Input.GetKey (KeyCode.Space)) {
-				dInput.splat = true;
-			} else {
-				dInput.splat = false;
-			}
-		} else {
-			dInput.fx = 0;
-			dInput.fz = 0;
-			dInput.rx = 0;
-			dInput.rz = 0;
-			dInput.splat = false;
+            if (Input.GetKey(KeyCode.Space))
+            {
+                dInput.splat = true;
+            }
+            else
+            {
+                dInput.splat = false;
+            }
 		}
 	}
 
@@ -59,4 +82,14 @@ public class InputHandler : MonoBehaviour {
 	{
 		_spawning = spawn;
 	}
+
+    public void setHeld(bool held)
+    {
+        _held = held;
+    }
+
+    public bool isHeld()
+    {
+        return _held;    
+    }
 }

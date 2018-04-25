@@ -55,27 +55,15 @@ public class DogController : NetworkBehaviour
 		{
 			return;
 		}
-
 		_inputD = _inputH.getInputData ();
-
-		//fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
-		//fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
-		//rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
-		//rz = Input.GetAxis("Vertical2") * FrontRunSpeed * Time.deltaTime;
-        //_animator.SetFloat("Velocity", _front.velocity.magnitude);
-        //Debug.Log(_animator.GetFloat("Velocity"));
-		//if (Input.GetKey(KeyCode.Space))
-		//{
-		//	_emitter.Splat();
-		//}
 
 		if (_inputD.splat)
 			_emitter.Splat ();
 
         if (_front.velocity.magnitude > 1){
-            DoPeePoofs();
+            //DoPeePoofs();
         } else {
-            StopPeePoofs();
+            //StopPeePoofs();
         }
 	}
 
@@ -85,6 +73,10 @@ public class DogController : NetworkBehaviour
 		_front.AddForceAtPosition(transform.forward * _inputD.rz, _rearPivot.position, ForceMode.Impulse);
 		_front.AddForceAtPosition(transform.right * _inputD.rx, _rearPivot.position, ForceMode.Impulse);
 
+        if(!_inputH.isHeld()) // moves dog to floor
+        {
+            transform.position = new Vector3(transform.position.x, 4f, transform.position.z);
+        }
 	}
 
 	void LateUpdate()
