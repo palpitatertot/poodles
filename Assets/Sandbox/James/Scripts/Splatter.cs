@@ -142,21 +142,28 @@ public class Splatter : NetworkBehaviour
         Debug.Log("Seeing if peeing?");
         foreach (Splatter s in splatters.Keys)
         {
-            if (newSplat.channelMask != SplatChannel.MAN && s.channelMask == newSplat.channelMask)
-            {
-                Drinker d = s.gameObject.GetComponent<Drinker>();
-                Debug.Log("Found me to pee");
-                if (!d.CanPee())
-                {
-                    Debug.Log("Can't pee");
-                    return false;
-                }
-                else
-                {
-                    Debug.Log("Peeing");
-                    d.Pee();
-                }
-            }
+			if (newSplat.channelMask != SplatChannel.MAN && s.channelMask == newSplat.channelMask) {
+				Drinker d = s.gameObject.GetComponent<Drinker> ();
+				Debug.Log ("Found me to pee");
+				if (!d.CanPee ()) {
+					Debug.Log ("Can't pee");
+					return false;
+				} else {
+					Debug.Log ("Peeing");
+					d.Pee ();
+				}
+			} 
+			else if (newSplat.channelMask == SplatChannel.MAN && s.channelMask == newSplat.channelMask) 
+			{
+				Grabber g = s.gameObject.GetComponent<Grabber> ();
+				if (g.hasMop) {
+					Debug.Log ("Man is splatting");
+					return true;
+				} else {
+					Debug.Log ("Man is not splatting");
+					return false;
+				}
+			}
         }
         return true;
     }
