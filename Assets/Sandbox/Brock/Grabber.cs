@@ -9,6 +9,7 @@ public class Grabber : NetworkBehaviour {
     public bool hasObject = false;
 	public bool hasMop = false;
 	public bool hasDog = false;
+    public GameObject dog;
 
     public GameObject handPosition;
 
@@ -49,6 +50,7 @@ public class Grabber : NetworkBehaviour {
 		if (ih) {
 			ih.setHeld (true);
 			hasDog = true;
+            dog = ih.gameObject;
 		} else {						//If is grabbed, and does not have input handler, then it is a mop
 			hasMop = true;
 		}
@@ -87,6 +89,7 @@ public class Grabber : NetworkBehaviour {
         hasObject = false;
 		hasMop = false;
 		hasDog = false;
+        dog = null;
         InputHandler ih = go.GetComponent<InputHandler>();
         if (ih)
         {
@@ -151,8 +154,11 @@ public class Grabber : NetworkBehaviour {
             Release();
         }
     }
-    
-  
+
+    public void DropDog()
+    {
+        Release();
+    }
 }
     
     

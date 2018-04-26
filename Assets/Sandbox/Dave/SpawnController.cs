@@ -97,12 +97,18 @@ public class SpawnController : NetworkBehaviour {
         if(!isServer){
             CmdBeginRespawn();
         }
-        RpcBeginRespawn();
+        else{
+            RpcBeginRespawn();    
+        }
     }
 
     [Command]
     void CmdBeginRespawn(){
-        RpcBeginRespawn();
+        if(isLocalPlayer){
+            DoFade();
+        } else {
+            RpcBeginRespawn();    
+        }
     }
 
     [ClientRpc]
@@ -110,6 +116,7 @@ public class SpawnController : NetworkBehaviour {
         if(!isLocalPlayer){
             return;
         }
+        BeginRespawn();
     }
 
 	public void DoFade()

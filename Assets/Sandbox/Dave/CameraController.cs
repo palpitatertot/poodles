@@ -45,14 +45,14 @@ public class CameraController : NetworkBehaviour {
             _spawnCameraPosition = CalculateSpawnCameraPosition();
             _spawnCameraPosition = new Vector3(_spawnCameraPosition.x, _spawnCameraHeight.y, _spawnCameraPosition.z);
         }
-        Debug.Log("SpawnCamera " + _spawnCameraPosition);
+        //Debug.Log("SpawnCamera " + _spawnCameraPosition);
 	}
 
 	void LateUpdate()
 	{
         if (_isLerping)
         {
-            Debug.Log("Lerping");
+            //Debug.Log("Lerping");
             float timeSinceStarted = Time.time - _timeStartedLerp;
             float percentageComplete = timeSinceStarted / _timeTakenToLerp;
 
@@ -115,11 +115,11 @@ public class CameraController : NetworkBehaviour {
         {
             x = y;
         }
-        x *= 10f;
+        x *= 50f;
         float tanTheta = Mathf.Abs(_cam.fieldOfView * .5f);
-        Debug.Log("FOV" + tanTheta);
+        //Debug.Log("FOV" + tanTheta);
         tanTheta = Mathf.Tan(Mathf.Deg2Rad * tanTheta);
-        Debug.Log("width" + x + " height " + x / tanTheta);
+        //Debug.Log("width" + x + " height " + x / tanTheta);
         return new Vector3(0,x/tanTheta,0);
     }
 
