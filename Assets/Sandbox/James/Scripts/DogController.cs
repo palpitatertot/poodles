@@ -26,6 +26,7 @@ public class DogController : NetworkBehaviour
 
     private AudioSource[] _sfx;
 	private float _runStartVolume;
+    private Drinker d;
 
 	void Start()
 	{
@@ -38,7 +39,7 @@ public class DogController : NetworkBehaviour
 		_inputH = GetComponent<InputHandler>();
         _sfx = GetComponents<AudioSource>();
 		_runStartVolume = _sfx [2].volume;
-
+        d = GetComponent<Drinker>();
 
         if (isLocalPlayer)
         {
@@ -65,7 +66,7 @@ public class DogController : NetworkBehaviour
 
 		if (_inputD.splat) {
 			_emitter.Splat ();
-			if (!_sfx [4].isPlaying) {
+			if (!_sfx [4].isPlaying && d.WaterLevel > 0) {               
 				_sfx [4].pitch = Random.Range (1.0f, 1.2f);
 				_sfx [4].Play ();
 			}
