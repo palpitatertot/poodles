@@ -173,7 +173,7 @@ public class Splatter : NetworkBehaviour
                 if (s != null && s.channelMask != SplatChannel.MAN)
                 {
                     Debug.Log("Player " + j + "is a dog");
-                    Renderer r = p[j].transform.GetChild(0).GetComponent<Renderer>();
+                    Renderer r = p[j].transform.GetChild(0).GetChild(0).GetComponent<Renderer>();
                             
                     if (s.channelMask == SplatChannel.DOG0)
                     {
