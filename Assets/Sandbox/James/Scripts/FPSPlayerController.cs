@@ -12,6 +12,7 @@ public class FPSPlayerController : NetworkBehaviour {
     private Rigidbody _body;
 	private float _pitch;
 	private Transform _camera;
+	private Transform _mopBottom;
 	Vector4 _splatChannel = new Vector4(0, 0, 0, 0);
 	private Splatter _emitter;
     private Vector3 _motion;
@@ -29,7 +30,7 @@ public class FPSPlayerController : NetworkBehaviour {
             _camera.gameObject.GetComponent<Camera>().cullingMask &= ~(1 << LayerMask.NameToLayer("CameraInvisible"));
             _camera.SetParent(transform);
 			_emitter = GetComponent<Splatter>();
-			_emitter.SetEmitter(transform);
+			_emitter.SetEmitter(transform.GetChild(2).transform);
 			_emitter.SetChannel(_splatChannel);
             //_body = GetComponent<Rigidbody>();
             _front = GetComponent<CharacterController>();
