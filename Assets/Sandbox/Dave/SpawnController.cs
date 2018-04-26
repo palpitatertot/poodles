@@ -93,9 +93,30 @@ public class SpawnController : NetworkBehaviour {
 		}
 	}
 
+    public void BeginRespawn(){
+        if(!isServer){
+            CmdBeginRespawn();
+        }
+        RpcBeginRespawn();
+    }
+
+    [Command]
+    void CmdBeginRespawn(){
+        RpcBeginRespawn();
+    }
+
+    [ClientRpc]
+    void RpcBeginRespawn(){
+        if(!isLocalPlayer){
+            return;
+        }
+    }
+
 	public void DoFade()
 	{
-
+        if(!isLocalPlayer){
+            return;
+        }
 		StartCoroutine (FadeOutIn ());
 	
 	}
