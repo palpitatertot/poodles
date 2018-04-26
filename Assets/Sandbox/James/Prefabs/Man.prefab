@@ -107,7 +107,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1397244083491912}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 21.880959, y: 17.891418, z: 39.20553}
+  m_LocalPosition: {x: 84.44554, y: 66.12466, z: 66.52599}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4953585029369452}
@@ -122,13 +122,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1267428836202526}
-  m_LocalRotation: {x: 0.19178244, y: -0, z: -0, w: 0.9814375}
-  m_LocalPosition: {x: 0.5970421, y: 0.5495815, z: -0.19752884}
+  m_LocalRotation: {x: 0.06676232, y: -0, z: -0, w: 0.9977689}
+  m_LocalPosition: {x: 0.5970421, y: 1.67, z: -0.19752884}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.6000001}
   m_Children: []
   m_Father: {fileID: 4405804086776564}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 22.114, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 7.656, y: 0, z: 0}
 --- !u!4 &4953585029369452
 Transform:
   m_ObjectHideFlags: 1
@@ -510,6 +510,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasObject: 0
+  hasMop: 0
+  hasDog: 0
   handPosition: {fileID: 1068712230551060}
 --- !u!114 &114333728337985886
 MonoBehaviour:
