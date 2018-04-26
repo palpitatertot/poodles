@@ -18,6 +18,7 @@ public class FPSPlayerController : NetworkBehaviour {
     private Vector3 _motion;
     private Vector3 _rotation;
     private AudioSource[] _sfx;
+    private Grabber g;
 
     void Start()
 	{
@@ -26,7 +27,10 @@ public class FPSPlayerController : NetworkBehaviour {
 		_pitch = 0f;
         if (isLocalPlayer)
         {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
             _sfx = GetComponents<AudioSource>();
+            g = GetComponent<Grabber>();
             _camera = Camera.allCameras[0].transform;
             _camera.position = transform.position - new Vector3(0, -2f, .5f);
             _camera.gameObject.GetComponent<Camera>().cullingMask &= ~(1 << LayerMask.NameToLayer("CameraInvisible"));
@@ -51,7 +55,7 @@ public class FPSPlayerController : NetworkBehaviour {
         if (Input.GetMouseButton(0))
 		{
 			_emitter.Splat();
-            if (!_sfx[1].isPlaying)
+            if (!_sfx[1].isPlaying && g.hasMop)
             {
                 _sfx[1].pitch = Random.Range(1.0f, 1.2f);
                 _sfx[1].Play();

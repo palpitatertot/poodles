@@ -10,10 +10,10 @@ public class PenTrigger : MonoBehaviour {
 
         Grabber grabber = other.gameObject.transform.parent.GetComponent<Grabber>();
 
-        if (g.hasDog)
-        {
-            //SpawnController s = grabber.g.gameObject.transform.parent
-        }
+        //if (g.hasDog)
+        //{
+        //    //SpawnController s = grabber.g.gameObject.transform.parent
+        //}
 
         //get man's grabber
     }
