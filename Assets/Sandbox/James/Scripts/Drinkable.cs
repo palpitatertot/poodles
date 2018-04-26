@@ -6,16 +6,14 @@ using UnityEngine.Networking;
 public class Drinkable : NetworkBehaviour {
     
     public int WaterPerSecond;
-    private List<Drinker> inRange = new List<Drinker>();
+    private List<Drinker> inRange = new List<Drinker>();    
 
-
-	private void Start()
-	{
+    private void Start()
+	{        
         StartCoroutine(Drinking());
 	}
 	private void OnTriggerEnter(Collider other)
-	{
-        
+	{              
         if(!isServer){
             Debug.Log("Entered as Client");
             return;
@@ -28,11 +26,13 @@ public class Drinkable : NetworkBehaviour {
             Debug.Log("D Exists");
             inRange.Add(d);
         }
-        Debug.Log(inRange.Count);
+        Debug.Log(inRange.Count);               
 	}
 
     private void OnTriggerExit(Collider other)
-    {
+    {        
+        TurnOffSound();
+
         if (!isServer)
         {
             Debug.Log("Leaved as Client");
@@ -48,6 +48,14 @@ public class Drinkable : NetworkBehaviour {
         Debug.Log(inRange.Count);
     }
 
+    public void TurnOffSound()
+    {
+        foreach (Drinker d in inRange)
+        {
+            d.TurnOffSound();
+        }
+    }
+
     IEnumerator Drinking(){
         while(true){
             foreach(Drinker d in inRange){
@@ -55,6 +63,5 @@ public class Drinkable : NetworkBehaviour {
             }
             yield return new WaitForSeconds(1);    
         }
-
     }
 }

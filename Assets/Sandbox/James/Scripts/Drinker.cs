@@ -11,9 +11,11 @@ public class Drinker : NetworkBehaviour {
     public int PeeCost = 1;
 
     public pauseMenu menu;
+    private AudioSource[] _sfx;
 
-	private void Start()
+    private void Start()
 	{
+        _sfx = GetComponents<AudioSource>();
         menu = GameObject.Find("PauseCanvas").GetComponent<pauseMenu>();	
 	}
 
@@ -31,6 +33,13 @@ public class Drinker : NetworkBehaviour {
         if(!isServer){
             return;
         }
+
+        if (!_sfx[1].isPlaying)
+        {
+            _sfx[1].pitch = Random.Range(1.0f, 1.2f);
+            _sfx[1].Play();
+        }
+
         WaterLevel += amount;
         if (WaterLevel > WaterMax)
         {
@@ -55,5 +64,13 @@ public class Drinker : NetworkBehaviour {
             return;
         }
         WaterLevel -= PeeCost;
+    }
+
+    public void TurnOffSound()
+    {
+        if (_sfx[1].isPlaying)
+        {
+            _sfx[1].Stop();
+        }
     }
 }

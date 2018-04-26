@@ -12,6 +12,8 @@ public class Grabber : NetworkBehaviour {
 
     public GameObject handPosition;
 
+    private AudioSource[] _sfx;
+
     Grabbable g;
 
     [SyncVar]
@@ -34,7 +36,7 @@ public class Grabber : NetworkBehaviour {
     }
     // Use this for initialization
     void Start () {
-        
+        _sfx = GetComponents<AudioSource>();
     }
 
     void _grab(GameObject go){
@@ -70,6 +72,13 @@ public class Grabber : NetworkBehaviour {
         {
             heldItemLoc = 4;
         }
+
+        if (hasMop)
+        {
+            _sfx[2].pitch = Random.Range(1.0f, 1.2f);
+            _sfx[2].Play();
+        }
+
         GameObject go = gameObject.transform.GetChild(heldItemLoc).gameObject;
         go.GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncRigidbody3D;
         go.GetComponent<Rigidbody>().isKinematic = false;

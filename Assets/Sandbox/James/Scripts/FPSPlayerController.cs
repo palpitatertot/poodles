@@ -17,14 +17,16 @@ public class FPSPlayerController : NetworkBehaviour {
 	private Splatter _emitter;
     private Vector3 _motion;
     private Vector3 _rotation;
+    private AudioSource[] _sfx;
 
-	void Start()
+    void Start()
 	{
         _motion = Vector3.zero;
         _rotation = Vector3.zero;
 		_pitch = 0f;
         if (isLocalPlayer)
         {
+            _sfx = GetComponents<AudioSource>();
             _camera = Camera.allCameras[0].transform;
             _camera.position = transform.position - new Vector3(0, -2f, .5f);
             _camera.gameObject.GetComponent<Camera>().cullingMask &= ~(1 << LayerMask.NameToLayer("CameraInvisible"));
@@ -40,18 +42,30 @@ public class FPSPlayerController : NetworkBehaviour {
 	}
 
 	void Update()
-	{
+	{   
 		if (!isLocalPlayer)
 		{
 			return;
 		}
-
-		if (Input.GetMouseButton(0))
+        
+        if (Input.GetMouseButton(0))
 		{
 			_emitter.Splat();
-		}
+            if (!_sfx[1].isPlaying)
+            {
+                _sfx[1].pitch = Random.Range(1.0f, 1.2f);
+                _sfx[1].Play();
+            }
+        }
+        else
+        {
+            if (_sfx[1].isPlaying)
+            {        
+                _sfx[1].Stop();
+            }
+        }
 
-		var x = Input.GetAxis("Horizontal") * transform.right;
+        var x = Input.GetAxis("Horizontal") * transform.right;
 		var z = Input.GetAxis("Vertical") * transform.forward;
         _motion = (x + z).normalized * PlayerRunSpeed * Time.deltaTime;
 		var rot = Input.GetAxis("Mouse X") * MouseSpeed;
@@ -61,6 +75,21 @@ public class FPSPlayerController : NetworkBehaviour {
         transform.Rotate(_rotation);
         _front.Move(_motion);
         _camera.localRotation = Quaternion.AngleAxis (_pitch, Vector3.right);
+        if(_front.velocity.magnitude > 1)
+        {
+            if (!_sfx[0].isPlaying)
+            {
+                _sfx[0].pitch = Random.Range(1.0f, 1.2f); //walking sounds                
+                _sfx[0].Play();
+            }
+        }
+        else
+        {
+            if (_sfx[0].isPlaying)
+            {
+                _sfx[0].Stop();
+            }
+        }
 	}
 
 	private void FixedUpdate()
