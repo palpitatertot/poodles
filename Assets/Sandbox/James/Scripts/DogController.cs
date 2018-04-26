@@ -34,7 +34,7 @@ public class DogController : NetworkBehaviour
         FrontPeePoofs.transform.position = _frontPivot.transform.position;
         RearPeePoofs.transform.position = _rearPivot.transform.position;
         _front = GetComponent<Rigidbody>();
-        //_animator = this.GetComponentInChildren<Animator>();
+        _animator = this.GetComponentInChildren<Animator>();
 		_inputH = GetComponent<InputHandler>();
         _sfx = GetComponents<AudioSource>();
 		_runStartVolume = _sfx [2].volume;
@@ -52,6 +52,7 @@ public class DogController : NetworkBehaviour
 
 	void Update()
 	{
+        _animator.SetFloat("Velocity", _front.velocity.magnitude);
 		if (!isLocalPlayer) {
 			return;
 		}
