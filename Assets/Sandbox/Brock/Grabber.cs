@@ -7,8 +7,12 @@ public class Grabber : NetworkBehaviour {
 
     [SyncVar]
     public bool hasObject = false;
+	public bool hasMop = false;
+	public bool hasDog = false;
 
     public GameObject handPosition;
+
+    private AudioSource[] _sfx;
 
     Grabbable g;
 
@@ -32,7 +36,7 @@ public class Grabber : NetworkBehaviour {
     }
     // Use this for initialization
     void Start () {
-        
+        _sfx = GetComponents<AudioSource>();
     }
 
     void _grab(GameObject go){
@@ -42,10 +46,14 @@ public class Grabber : NetworkBehaviour {
         go.GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
         go.transform.GetChild(0).gameObject.GetComponent<Collider>().enabled = false;
         InputHandler ih = go.GetComponent<InputHandler>();
-        if (ih){
-            ih.setHeld(true);
-        }
+		if (ih) {
+			ih.setHeld (true);
+			hasDog = true;
+		} else {						//If is grabbed, and does not have input handler, then it is a mop
+			hasMop = true;
+		}
         hasObject = true;
+
     }
 
     void Grab(){
@@ -64,12 +72,21 @@ public class Grabber : NetworkBehaviour {
         {
             heldItemLoc = 4;
         }
+
+        if (hasMop)
+        {
+            _sfx[2].pitch = Random.Range(1.0f, 1.2f);
+            _sfx[2].Play();
+        }
+
         GameObject go = gameObject.transform.GetChild(heldItemLoc).gameObject;
         go.GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncRigidbody3D;
         go.GetComponent<Rigidbody>().isKinematic = false;
         go.transform.GetChild(0).GetComponent<Collider>().enabled = true;
         go.gameObject.transform.SetParent(null);
         hasObject = false;
+		hasMop = false;
+		hasDog = false;
         InputHandler ih = go.GetComponent<InputHandler>();
         if (ih)
         {
@@ -128,16 +145,11 @@ public class Grabber : NetworkBehaviour {
 
     // Update is called once per frame
     void Update () {
-
-        if (Input.GetKeyDown (KeyCode.E) && !hasObject && inRange) {
-            Grab();
-            
-        } else if (Input.GetKeyDown (KeyCode.E) && hasObject) {
+		if (Input.GetKeyDown (KeyCode.E) && !hasObject && inRange) {
+            Grab();			
+		} else if (Input.GetKeyDown (KeyCode.E) && hasObject) {
             Release();
         }
-   
-
-
     }
     
   

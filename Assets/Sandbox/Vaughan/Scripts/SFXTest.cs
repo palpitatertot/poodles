@@ -108,7 +108,7 @@ public class SFXTest : MonoBehaviour {
     private void PlaySound(AudioSource source)
     {
         source.pitch = Random.Range(1.0f, 1.2f);
-        source.Play();
+        source.Play();              
     }
 
 }

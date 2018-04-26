@@ -19,16 +19,19 @@ public class InputHandler : MonoBehaviour {
 	public float FrontTurnSpeed;
 	public float RearTurnSpeed;
 
+    private AudioSource[] _sfx;
 	private dogInput dInput;
+
+    private bool _isWalking = false;
+    private bool _startWalking = false;
 
 	private bool _spawning;
     private bool _held;
 
 	// Use this for initialization
 	void Start () {
-        _spawning = false;
-        _held = false;
-	}
+         _sfx = GetComponents<AudioSource>();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -42,6 +45,12 @@ public class InputHandler : MonoBehaviour {
         }
         else if (_held)
         {
+            if (!_sfx[3].isPlaying)
+            {
+                _sfx[3].pitch = Random.Range(1.0f, 1.2f);
+                _sfx[3].Play();
+            }
+
             dInput.fx = 0;
             dInput.fz = 0;
             dInput.rx = 0;
@@ -56,6 +65,9 @@ public class InputHandler : MonoBehaviour {
             }
         }
         else {
+            if(_sfx[3].isPlaying)
+            _sfx[3].Stop();
+
             dInput.fx = Input.GetAxis("Horizontal") * FrontTurnSpeed * Time.deltaTime;
             dInput.fz = Input.GetAxis("Vertical") * FrontRunSpeed * Time.deltaTime;
             dInput.rx = Input.GetAxis("Horizontal2") * FrontTurnSpeed * Time.deltaTime;
@@ -69,11 +81,11 @@ public class InputHandler : MonoBehaviour {
             {
                 dInput.splat = false;
             }
+
 		}
 	}
 
-
-	public dogInput getInputData()
+    public dogInput getInputData()
 	{
 		return dInput;
 	}

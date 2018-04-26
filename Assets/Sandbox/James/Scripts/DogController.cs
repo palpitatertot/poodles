@@ -24,6 +24,8 @@ public class DogController : NetworkBehaviour
 	private InputHandler _inputH;
 	private dogInput _inputD;
 
+    private AudioSource[] _sfx;
+	private float _runStartVolume;
 
 	void Start()
 	{
@@ -34,6 +36,8 @@ public class DogController : NetworkBehaviour
         _front = GetComponent<Rigidbody>();
         //_animator = this.GetComponentInChildren<Animator>();
 		_inputH = GetComponent<InputHandler>();
+        _sfx = GetComponents<AudioSource>();
+		_runStartVolume = _sfx [2].volume;
 
 
         if (isLocalPlayer)
@@ -48,20 +52,48 @@ public class DogController : NetworkBehaviour
 
 	void Update()
 	{
-		if (!isLocalPlayer)
-		{
+		if (!isLocalPlayer) {
 			return;
 		}
 		_inputD = _inputH.getInputData ();
 
-		if (_inputD.splat)
-			_emitter.Splat ();
 
-        if (_front.velocity.magnitude > 1){
-            //DoPeePoofs();
-        } else {
-            //StopPeePoofs();
-        }
+		if (Input.GetKey (KeyCode.F)) { //bark
+			PlaySound (_sfx [0]);
+		}
+
+		if (_inputD.splat) {
+			_emitter.Splat ();
+			if (!_sfx [4].isPlaying) {
+				_sfx [4].pitch = Random.Range (1.0f, 1.2f);
+				_sfx [4].Play ();
+			}
+		} else {
+			if (_sfx [4].isPlaying) {
+				_sfx [4].Stop ();                
+			}
+		}
+
+
+		if (_front.velocity.magnitude > 1) {
+			DoPeePoofs ();
+			if (!_sfx [2].isPlaying) {
+				_sfx [2].pitch = Random.Range (1.0f, 1.2f); //walking sounds
+				_sfx[2].volume = _runStartVolume;
+				_sfx [2].Play ();
+			}
+		} else {
+			if (_sfx [2].isPlaying) {
+				_sfx [2].volume = _runStartVolume * _front.velocity.magnitude;
+				if(_sfx[2].volume <= 0.0f) _sfx [2].Stop ();
+			}
+
+			StopPeePoofs ();
+		}
+
+		if (!Input.anyKey) {
+			if (_sfx [2].isPlaying) _sfx [2].Stop ();
+		}
 	}
 
 	void FixedUpdate(){        
@@ -76,13 +108,19 @@ public class DogController : NetworkBehaviour
         }
 	}
 
-	/*void LateUpdate()
+    /*void LateUpdate()
 	{
         if(!isLocalPlayer)
         {
             return;
         }
 	}*/
+
+    private void PlaySound(AudioSource source)
+    {
+        source.pitch = Random.Range(1.0f, 1.2f);
+        source.Play();
+    }
 
     void DoPeePoofs()
     {
