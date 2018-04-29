@@ -30,6 +30,7 @@ public class CameraController : NetworkBehaviour {
 
 		if (isLocalPlayer) {
 			_cam = Camera.allCameras [0];
+            _cam.cullingMask = _cam.cullingMask & ~(1 << 10);
 			_camTransform = _cam.transform;
 			_camTransform.SetParent(transform);
 			_camTransform.position = transform.position + CameraHeight;
