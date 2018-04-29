@@ -1,0 +1,49 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PenTrigger : MonoBehaviour {
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("Entered Pen");
+
+<<<<<<< HEAD
+        Grabber grabber = other.gameObject.transform.GetComponent<Grabber>();
+
+        if(!grabber){
+            return;
+        }
+        Debug.Log("MAAAAAAN Entered Pen");
+        if (grabber.hasDog)
+        {
+            Debug.Log("MANANA HAS DOGGO");
+            SpawnController s = grabber.dog.GetComponent<SpawnController>();
+            if(s){
+                s.BeginRespawn();
+                grabber.DropDog();
+                Debug.Log("MANANA DROPPOD DOGGO");
+            }
+        }
+=======
+        Grabber grabber = other.gameObject.transform.parent.GetComponent<Grabber>();
+
+        //if (g.hasDog)
+        //{
+        //    //SpawnController s = grabber.g.gameObject.transform.parent
+        //}
+
+>>>>>>> 9bb608f2b7489118786ee623d5b9fefff5aa7df4
+        //get man's grabber
+    }
+
+    // Use this for initialization
+    void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		
+	}
+}

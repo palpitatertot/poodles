@@ -40,6 +40,9 @@ public class CameraController : NetworkBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+        if(!isLocalPlayer){
+            return;
+        }
         if(_floor == null){
             _spawnCameraHeight = CalculateSpawnCameraHeight();
             _spawnCameraPosition = CalculateSpawnCameraPosition();
@@ -50,6 +53,10 @@ public class CameraController : NetworkBehaviour {
 
 	void LateUpdate()
 	{
+        if (!isLocalPlayer)
+        {
+            return;
+        }
         if (_isLerping)
         {
             //Debug.Log("Lerping");

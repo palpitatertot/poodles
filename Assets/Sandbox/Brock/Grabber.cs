@@ -22,7 +22,7 @@ public class Grabber : NetworkBehaviour {
 
     public void OnTriggerEnter(Collider other){
         if(isServer){
-            inRange = true;    
+            inRange = true;
             g = other.gameObject.transform.parent.gameObject.GetComponent<Grabbable> (); 
         }
         
@@ -69,6 +69,9 @@ public class Grabber : NetworkBehaviour {
     }
 
     void _release(){
+        if(!hasObject){
+            return;
+        }
         int heldItemLoc = 3;
         if (isLocalPlayer)
         {

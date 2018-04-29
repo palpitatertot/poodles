@@ -52,6 +52,9 @@ public class SpawnController : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        if(!isLocalPlayer){
+            return;
+        }
 		if (Input.GetKeyDown (KeyCode.P)) {
 			DoFade ();
 		}
@@ -95,35 +98,44 @@ public class SpawnController : NetworkBehaviour {
 
     public void BeginRespawn(){
         if(!isServer){
+            Debug.Log("Sending Fade Command");
             CmdBeginRespawn();
         }
-        else{
+        else if (isServer){
+            Debug.Log("Sending Fade RPC");
             RpcBeginRespawn();    
         }
     }
 
     [Command]
     void CmdBeginRespawn(){
+        Debug.Log("Attempting Fade Command");
         if(isLocalPlayer){
+            Debug.Log("Fade Command");
             DoFade();
         } else {
+            Debug.Log("Sending Fade RPC");
             RpcBeginRespawn();    
         }
     }
 
     [ClientRpc]
     void RpcBeginRespawn(){
+        Debug.Log("Attempting Fade RPC");
         if(!isLocalPlayer){
             return;
         }
-        BeginRespawn();
+        Debug.Log("Fade RPC");
+        DoFade();
     }
 
 	public void DoFade()
 	{
+        Debug.Log("Attempting Doing Fade.");
         if(!isLocalPlayer){
             return;
         }
+        Debug.Log("Doing Fade.");
 		StartCoroutine (FadeOutIn ());
 	
 	}
@@ -143,7 +155,7 @@ public class SpawnController : NetworkBehaviour {
 
 		_cControl.showSpawnLocations ();
         // NEED TO HIDE DOG
-        _dControl.moveDog(new Vector3(0, -10f, 0));
+        _dControl.moveDog(new Vector3(-1000f, -1000f, -1000f));
 		_cControl.setSpawnCamera(true);
 		yield return new WaitForSeconds (1.5f);
 

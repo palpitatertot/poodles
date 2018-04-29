@@ -11,12 +11,13 @@ public class DogController : NetworkBehaviour
 	public float RearTurnSpeed;
 	public float MouseSpeed;
 
+    private bool isPenned = false;
 
 	private Transform _frontPivot;
 	private Transform _rearPivot;
 	private Rigidbody _front;
-    private Rigidbody _rear;
-	private float fx, fz, rx, rz, y;
+    //private Rigidbody _rear;
+	//private float fx, fz, rx, rz, y;
     Vector4 _splatChannel = new Vector4(1, 0, 0, 0);
     private Splatter _emitter;
     private Animator _animator;
@@ -53,6 +54,15 @@ public class DogController : NetworkBehaviour
 
 	void Update()
 	{
+        if (!isLocalPlayer){
+            return;    
+        }
+
+        if(isPenned){
+            SetPenned(false);
+            gameObject.GetComponent<SpawnController>().BeginRespawn();
+        }
+
         _animator.SetFloat("Velocity", _front.velocity.magnitude);
 		if (!isLocalPlayer) {
 			return;
@@ -166,5 +176,25 @@ public class DogController : NetworkBehaviour
     void CmdMoveDog(Vector3 moveLocation){
         _moveDog(moveLocation);
         RpcMoveDog(moveLocation);
+    }
+
+    public void SetPenned(bool p){
+        if(isServer){
+            isPenned = p;
+            RpcSetPenned(p);
+        } else {
+            CmdSetPenned(p);
+        }
+    }
+
+    [Command]
+    void CmdSetPenned(bool p){
+        isPenned = p;
+        RpcSetPenned(p);
+    }
+
+    [ClientRpc]
+    void RpcSetPenned(bool p){
+        isPenned = p;
     }
 }
