@@ -32,7 +32,7 @@ public class FPSPlayerController : NetworkBehaviour {
             _sfx = GetComponents<AudioSource>();
             g = GetComponent<Grabber>();
             _camera = Camera.allCameras[0].transform;
-            _camera.position = transform.position - new Vector3(0, -2f, .5f);
+            _camera.position = transform.position - new Vector3(0, -7f, .5f);
             _camera.gameObject.GetComponent<Camera>().cullingMask &= ~(1 << LayerMask.NameToLayer("CameraInvisible"));
             _camera.SetParent(transform);
 			_emitter = GetComponent<Splatter>();
