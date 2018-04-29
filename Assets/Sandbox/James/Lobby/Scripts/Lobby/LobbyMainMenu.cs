@@ -11,6 +11,7 @@ namespace Prototype.NetworkLobby
 
         public RectTransform lobbyServerList;
         public RectTransform lobbyPanel;
+		public RectTransform InfoPanel;
 
         public InputField ipInput;
         public InputField matchNameInput;
@@ -77,6 +78,12 @@ namespace Prototype.NetworkLobby
             lobbyManager.backDelegate = lobbyManager.SimpleBackClbk;
             lobbyManager.ChangeTo(lobbyServerList);
         }
+
+		public void OnClickInfo()
+		{
+			lobbyManager.ChangeTo (InfoPanel);
+			lobbyManager.backDelegate = lobbyManager.OnInfoBack;
+		}
 
         void onEndEditIP(string text)
         {

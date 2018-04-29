@@ -503,5 +503,10 @@ namespace Prototype.NetworkLobby
             ChangeTo(mainMenuPanel);
             infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
         }
+
+		public void OnInfoBack()
+		{
+			ChangeTo (mainMenuPanel);
+		}
     }
 }
