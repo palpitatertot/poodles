@@ -15,6 +15,7 @@ namespace Prototype.NetworkLobby
 
         public InputField ipInput;
         public InputField matchNameInput;
+        public GameObject InfoButton;
 
         public void OnEnable()
         {
@@ -80,9 +81,10 @@ namespace Prototype.NetworkLobby
         }
 
 		public void OnClickInfo()
-		{
+        {
 			lobbyManager.ChangeTo (InfoPanel);
 			lobbyManager.backDelegate = lobbyManager.OnInfoBack;
+            InfoButton.SetActive(false);
 		}
 
         void onEndEditIP(string text)

@@ -19,6 +19,8 @@ namespace Prototype.NetworkLobby
         public Material DogMat1;
         public Material DogMat2;
 
+        public GameObject InfoButton;
+
         private Dictionary<int, LobbyPlayer> lobbyPlayers;
         private Dictionary<int, Teams.Team> currentPlayers;
 
@@ -506,6 +508,7 @@ namespace Prototype.NetworkLobby
 
 		public void OnInfoBack()
 		{
+            InfoButton.SetActive(true);
 			ChangeTo (mainMenuPanel);
 		}
     }
