@@ -87,6 +87,7 @@ public class pauseMenu : MonoBehaviour
         showScore = !showScore;
         updateScore();
         scoreMenuUI.SetActive(showScore);
+		waterLevelUI.SetActive (!showScore);
     }
 
     public void LoadMenu()
@@ -114,7 +115,7 @@ public class pauseMenu : MonoBehaviour
 		if (totalScores > 1.5) 
 			scores = scores / totalScores;
 		
-		if(totalScores > 0.75 * numPlayers){
+		if(totalScores > 0.9 * numPlayers){
 			MessText.text = "Total Mess: " + totalScores.ToString("n2") + "! The house has gone to the dogs!";
 		} else {
 			MessText.text = "Total Mess: " + totalScores.ToString("n2") + ". Man rules this roost.";
@@ -142,7 +143,7 @@ public class pauseMenu : MonoBehaviour
 		Vector4 scores = SplatManagerSystem.instance.scores + new Vector4(0.1f, 0.1f, 0.1f, 0.1f);
 		float totalScores = scores.x + scores.y + scores.z + scores.w;
 
-		if (totalScores < 0.8 * numPlayers)
+		if (totalScores < 0.9 * numPlayers)
 			winnerText.text = "THE MAN IS THE WINNER!";
 		else {
 
@@ -157,6 +158,14 @@ public class pauseMenu : MonoBehaviour
 		//scoreMenuUI.transform.GetChild (4).gameObject.SetActive (true);
 		scoreMenuUI.SetActive (true);
 
+	}
+
+	public
+	void setColors(List<Vector4> colors)
+	{
+		p1Score.color = colors [0];
+		p2Score.color = colors [1];
+		p3Score.color = colors [2];
 	}
 		
 	IEnumerator updateTime()

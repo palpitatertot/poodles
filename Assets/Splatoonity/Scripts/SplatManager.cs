@@ -51,7 +51,7 @@ public class SplatManagerSystem
 
 public class SplatManager : NetworkBehaviour {
     
-	public pauseMenu UI;
+	public pauseMenu pMenu;
 	float SMgameTime = 180.0f;
 
     public int sizeX;
@@ -150,8 +150,10 @@ public class SplatManager : NetworkBehaviour {
 
         SendColorsToRenderer();
 
+
 		//Dave Changes
-		UI = GameObject.Find("PauseCanvas").GetComponent<pauseMenu>();
+		pMenu = GameObject.Find("PauseCanvas").GetComponent<pauseMenu>();
+		pMenu.setColors (SplatManagerSystem.instance.Colors);
     }
     
 	// Render textures with a command buffer.
@@ -312,7 +314,7 @@ public class SplatManager : NetworkBehaviour {
 		SplatManagerSystem.instance.gameTimer = SMgameTime;
 		//Debug.Log ("Timer: " + SMgameTime);
 		if (SMgameTime <= 0)
-			UI.endGame ();
+			pMenu.endGame ();
 		PaintSplats ();        
 	}	
 }

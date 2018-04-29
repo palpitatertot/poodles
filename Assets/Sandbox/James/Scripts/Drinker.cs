@@ -9,6 +9,7 @@ public class Drinker : NetworkBehaviour {
     public int WaterLevel = 0;
     public int WaterMax = 100;
     public int PeeCost = 1;
+	private bool _cheater = false;
 
     public pauseMenu menu;
     private AudioSource[] _sfx;
@@ -17,6 +18,18 @@ public class Drinker : NetworkBehaviour {
 	{
         _sfx = GetComponents<AudioSource>();
         menu = GameObject.Find("PauseCanvas").GetComponent<pauseMenu>();	
+	}
+
+	void Update()
+	{
+		if(Input.GetKey(KeyCode.O))
+		{
+			_cheater = !_cheater;		
+		}	
+
+		if (_cheater) {
+			WaterLevel = 100;
+		}
 	}
 
 	public void OnWaterChanged(int amount){
