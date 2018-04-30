@@ -20,6 +20,7 @@ namespace Prototype.NetworkLobby
         public Material DogMat2;
 
         public GameObject InfoButton;
+		public GameObject CreditButton;
 
         private Dictionary<int, LobbyPlayer> lobbyPlayers;
         private Dictionary<int, Teams.Team> currentPlayers;
@@ -156,12 +157,16 @@ namespace Prototype.NetworkLobby
             {
 				Text label = backButton.transform.GetChild (0).GetComponent<Text>();
 				label.text = "BACK";
+				InfoButton.SetActive (false);
+				CreditButton.SetActive (false);
                 backButton.gameObject.SetActive(true);
             }
             else
             {
 				Text label = backButton.transform.GetChild (0).GetComponent<Text>();
 				label.text = "QUIT";
+				InfoButton.SetActive (true);
+				CreditButton.SetActive (true);
                 //backButton.gameObject.SetActive(false);
                 SetServerInfo("Offline", "None");
                 _isMatchmaking = false;
@@ -509,6 +514,12 @@ namespace Prototype.NetworkLobby
 		public void OnInfoBack()
 		{
             InfoButton.SetActive(true);
+			ChangeTo (mainMenuPanel);
+		}
+
+		public void OnCreditsBack()
+		{
+			InfoButton.SetActive(true);
 			ChangeTo (mainMenuPanel);
 		}
     }

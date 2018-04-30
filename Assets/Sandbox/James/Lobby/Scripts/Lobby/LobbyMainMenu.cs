@@ -12,10 +12,12 @@ namespace Prototype.NetworkLobby
         public RectTransform lobbyServerList;
         public RectTransform lobbyPanel;
 		public RectTransform InfoPanel;
+		public RectTransform CreditPanel;
 
         public InputField ipInput;
         public InputField matchNameInput;
         public GameObject InfoButton;
+		public GameObject CreditButton;
 
         public void OnEnable()
         {
@@ -85,6 +87,13 @@ namespace Prototype.NetworkLobby
 			lobbyManager.ChangeTo (InfoPanel);
 			lobbyManager.backDelegate = lobbyManager.OnInfoBack;
             InfoButton.SetActive(false);
+		}
+
+		public void OnClickCredit()
+		{
+			lobbyManager.ChangeTo (CreditPanel);
+			lobbyManager.backDelegate = lobbyManager.OnCreditsBack;
+			CreditButton.SetActive(false);
 		}
 
         void onEndEditIP(string text)
