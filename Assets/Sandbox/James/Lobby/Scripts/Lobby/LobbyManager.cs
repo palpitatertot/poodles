@@ -22,6 +22,8 @@ namespace Prototype.NetworkLobby
         public GameObject InfoButton;
 		public GameObject CreditButton;
 
+        private LobbyNetworkDiscovery discovery;
+
         private Dictionary<int, LobbyPlayer> lobbyPlayers;
         private Dictionary<int, Teams.Team> currentPlayers;
 
@@ -64,7 +66,11 @@ namespace Prototype.NetworkLobby
         protected LobbyHook _lobbyHooks;
 
         void Start()
-        {   
+        {
+            discovery = GetComponent<LobbyNetworkDiscovery>();
+            discovery.Initialize();
+            discovery.StartAsClient();
+
             currentPlayers = new Dictionary<int, Teams.Team>();
             lobbyPlayers = new Dictionary<int, LobbyPlayer>();
 
@@ -226,8 +232,11 @@ namespace Prototype.NetworkLobby
             {
                 StopHost();
             }
+            discovery.StopBroadcast();
+            discovery.Initialize();
+            discovery.StartAsClient();
 
-            
+
             ChangeTo(mainMenuPanel);
         }
 
@@ -246,6 +255,9 @@ namespace Prototype.NetworkLobby
         public void StopServerClbk()
         {
             StopServer();
+            discovery.StopBroadcast();
+            discovery.Initialize();
+            discovery.StartAsClient();
             ChangeTo(mainMenuPanel);
         }
 
@@ -272,6 +284,8 @@ namespace Prototype.NetworkLobby
         public override void OnStartHost()
         {
             base.OnStartHost();
+            discovery.Initialize();
+            discovery.StartAsServer();
 
             ChangeTo(lobbyPanel);
             backDelegate = StopHostClbk;

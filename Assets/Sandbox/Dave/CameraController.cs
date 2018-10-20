@@ -5,12 +5,15 @@ using UnityEngine.Networking;
 
 public class CameraController : NetworkBehaviour {
 
+    public float smoothTime = 0.3F;
+    private Vector3 dampVelocity = Vector3.zero;
+
 	private Camera _cam;
 	private Transform _camTransform;
 	public Vector3 CameraHeight;
     private Vector3 _spawnCameraHeight;
     private Vector3 _spawnCameraPosition;
-	private Vector3 _originalCamHeight = new Vector3(0,35,0);
+	private Vector3 _originalCamHeight = new Vector3(0,7,0);
 	private bool _isLerping;
     private bool _isSpawning;
 	private Vector3 _cameraStartPosition;
@@ -21,7 +24,8 @@ public class CameraController : NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		CameraHeight = _originalCamHeight;
+        
+        CameraHeight = _originalCamHeight;
         //_spawnCameraHeight = CalculateSpawnCameraHeight();
         //_spawnCameraPosition = CalculateSpawnCameraPosition();
         //_spawnCameraPosition = new Vector3(_spawnCameraPosition.x, _spawnCameraHeight.y, _spawnCameraPosition.z);
@@ -74,7 +78,14 @@ public class CameraController : NetworkBehaviour {
         else if (_isSpawning){
             _camTransform.position = _spawnCameraHeight;
 		} else {
-			_camTransform.position = transform.position + CameraHeight;
+            float locVel = gameObject.GetComponentInParent<Rigidbody>().velocity.magnitude;
+            if (locVel < 10) {
+                locVel = 10;
+            }
+
+             Vector3 newPos = transform.position + CameraHeight * Mathf.Min(35,locVel * (float).1);
+            _camTransform.position = Vector3.SmoothDamp(_camTransform.position, newPos, ref dampVelocity, smoothTime);
+            _camTransform.LookAt(transform);
 		}
 	}
 
