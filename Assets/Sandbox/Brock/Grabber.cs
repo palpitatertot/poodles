@@ -14,11 +14,16 @@ public class Grabber : NetworkBehaviour {
     public GameObject handPosition;
 
     private AudioSource[] _sfx;
+    private Transform _hand;
 
     Grabbable g;
 
     [SyncVar]
     private bool inRange;
+
+    public Grabbable GetGrabbable(){
+        return g;
+    }
 
     public void OnTriggerEnter(Collider other){
         if(isServer){
@@ -38,10 +43,11 @@ public class Grabber : NetworkBehaviour {
     // Use this for initialization
     void Start () {
         _sfx = GetComponents<AudioSource>();
+        _hand = gameObject.transform.GetChild(2).gameObject.transform.GetChild(0);
     }
 
     void _grab(GameObject go){
-        go.transform.parent = gameObject.transform;
+        go.transform.parent = handPosition.transform;
         go.transform.position = handPosition.transform.position;
         go.GetComponent<Rigidbody>().isKinematic = true;
         go.GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncNone;
@@ -72,10 +78,10 @@ public class Grabber : NetworkBehaviour {
         if(!hasObject){
             return;
         }
-        int heldItemLoc = 3;
+        int heldItemLoc = 5;
         if (isLocalPlayer)
         {
-            heldItemLoc = 4;
+            heldItemLoc = 6;
         }
 
         if (hasMop)
@@ -84,7 +90,7 @@ public class Grabber : NetworkBehaviour {
             _sfx[2].Play();
         }
 
-        GameObject go = gameObject.transform.GetChild(heldItemLoc).gameObject;
+        GameObject go = _hand.GetChild(0).gameObject;
         go.GetComponent<NetworkTransform>().transformSyncMode = NetworkTransform.TransformSyncMode.SyncRigidbody3D;
         go.GetComponent<Rigidbody>().isKinematic = false;
         go.transform.GetChild(0).GetComponent<Collider>().enabled = true;

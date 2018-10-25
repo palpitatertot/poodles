@@ -7,7 +7,15 @@ public class FPSPlayerController : NetworkBehaviour {
 	public float MouseSpeed;
 	public float CameraPitchClamp;
 	public GameObject TPMesh;
-	public GameObject FPMesh;
+	public GameObject RightArm;
+    public GameObject LeftArm;
+
+    private Animator _animator;
+    private bool _mopping = false;
+    private Quaternion _leftGrabRotation;
+    private Quaternion _rightGrabRotation;
+    private Quaternion _leftDownRotation;
+    private Quaternion _rightDownRotation;
     private CharacterController _front;
     private Rigidbody _body;
 	private float _pitch;
@@ -41,7 +49,17 @@ public class FPSPlayerController : NetworkBehaviour {
             //_body = GetComponent<Rigidbody>();
             _front = GetComponent<CharacterController>();
 			TPMesh.SetActive (false);
-			FPMesh.SetActive (true);
+			LeftArm.SetActive (true);
+            RightArm.SetActive(true);
+
+            /*_rightGrabRotation = RightArm.transform.localRotation;
+            _leftGrabRotation = LeftArm.transform.localRotation;
+            LeftArm.transform.Rotate(new Vector3(90, 0, 0));
+            RightArm.transform.Rotate(new Vector3(90, 0, 0));
+            _rightDownRotation = RightArm.transform.localRotation;
+            _leftDownRotation = LeftArm.transform.localRotation;
+*/
+            _animator = LeftArm.GetComponentInChildren<Animator>();
         }
 	}
 
@@ -51,24 +69,52 @@ public class FPSPlayerController : NetworkBehaviour {
 		{
 			return;
 		}
-        
+
+        /*if(!g.hasObject){
+            Grabbable gg = g.GetGrabbable();
+            if (gg)
+            {
+                LeftArm.transform.localRotation = Quaternion.Lerp(_leftDownRotation, _leftGrabRotation, Time.time * .1f);
+                RightArm.transform.localRotation = Quaternion.Lerp(_rightDownRotation, _rightGrabRotation, Time.time * .1f);
+            }
+            else
+            {
+                LeftArm.transform.localRotation = Quaternion.Lerp(_leftGrabRotation, _leftDownRotation, Time.time / .1f);
+                RightArm.transform.localRotation = Quaternion.Lerp(_rightGrabRotation, _rightDownRotation, Time.time * .1f);
+            }
+        }*/
+
+
         if (Input.GetMouseButton(0))
-		{
-			_emitter.Splat();
+        {
+            _emitter.Splat();
             if (!_sfx[1].isPlaying && g.hasMop)
             {
                 _sfx[1].pitch = Random.Range(1.0f, 1.2f);
                 _sfx[1].Play();
             }
+            if (!_mopping && g.hasMop)
+            {
+                Debug.Log("Now Mopping");
+                _mopping = true;
+                _animator.SetBool("isMopping", true);
+                //LeftArm.transform.localRotation = _leftDownRotation;
+            }
         }
         else
         {
             if (_sfx[1].isPlaying)
-            {        
+            {
                 _sfx[1].Stop();
             }
+            if (_mopping)
+            {
+                Debug.Log("Not Mopping");
+                _mopping = false;
+                //LeftArm.transform.localRotation = _leftGrabRotation;
+                _animator.SetBool("isMopping", false);
+            }
         }
-
         var x = Input.GetAxis("Horizontal") * transform.right;
 		var z = Input.GetAxis("Vertical") * transform.forward;
         _motion = (x + z).normalized * PlayerRunSpeed * Time.deltaTime;
