@@ -94,22 +94,22 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4789667954695044}
+  - component: {fileID: 114845374921774498}
   - component: {fileID: 114991199195751864}
-  - component: {fileID: 54044448616455660}
-  - component: {fileID: 114234746571263242}
-  - component: {fileID: 114844591384740236}
   - component: {fileID: 114469876353424382}
   - component: {fileID: 114398851948436936}
-  - component: {fileID: 114337471180294290}
-  - component: {fileID: 114845374921774498}
-  - component: {fileID: 114308710696588984}
   - component: {fileID: 114951039855830072}
+  - component: {fileID: 114308710696588984}
+  - component: {fileID: 114234746571263242}
+  - component: {fileID: 114844591384740236}
+  - component: {fileID: 54044448616455660}
   - component: {fileID: 82865584709484732}
   - component: {fileID: 82656652531551790}
   - component: {fileID: 82390303844855478}
   - component: {fileID: 82909320991315522}
   - component: {fileID: 82382071402239620}
   - component: {fileID: 114866970549892468}
+  - component: {fileID: 136128762749161506}
   m_Layer: 0
   m_Name: Dog
   m_TagString: Player
@@ -1404,7 +1404,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1106694524284286}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -2.087994, y: -0.86173964, z: 3.5494928}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4960300615561120}
@@ -1892,7 +1892,7 @@ AudioSource:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-    m_RotationOrder: 4
+    m_RotationOrder: 0
   reverbZoneMixCustomCurve:
     serializedVersion: 2
     m_Curve:
@@ -2051,23 +2051,6 @@ MonoBehaviour:
   fadeImage: {fileID: 0}
   i: 0
   j: 0
---- !u!114 &114337471180294290
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1106694524284286}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5b0655de78abb549adcb2b6a08f4fd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  colorTex: {fileID: 2800000, guid: 9441cb4c3b8903c479f080efb0bd26fb, type: 3}
-  splatTex: {fileID: 0}
-  RT256: {fileID: 0}
-  RT4: {fileID: 0}
-  Tex4: {fileID: 0}
-  cam: {fileID: 0}
 --- !u!114 &114398851948436936
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2130,10 +2113,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 060c96b0160fb9c43818e620a17ade13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FrontRunSpeed: 100
-  RearRunSpeed: 50
-  FrontTurnSpeed: 10
-  RearTurnSpeed: 20
+  FrontRunSpeed: 20
+  RearRunSpeed: 30
+  FrontTurnSpeed: 2
+  RearTurnSpeed: 50
 --- !u!114 &114866970549892468
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2156,6 +2139,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad50de369d07d2f4ebe4566d71a27ef6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  VelocityHeightModifier: 0.15
+  smoothTime: 0.2
   CameraHeight: {x: 0, y: 0, z: 0}
 --- !u!114 &114991199195751864
 MonoBehaviour:
@@ -2170,11 +2155,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   FrontPeePoofs: {fileID: 198416987810805400}
   RearPeePoofs: {fileID: 198294173551337708}
-  FrontRunSpeed: 100
-  RearRunSpeed: 50
-  FrontTurnSpeed: 10
-  RearTurnSpeed: 20
-  MouseSpeed: 0
+--- !u!136 &136128762749161506
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1106694524284286}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 1
+  m_Height: 4
+  m_Direction: 2
+  m_Center: {x: 0, y: 2, z: 0}
 --- !u!136 &136716336063044796
 CapsuleCollider:
   m_ObjectHideFlags: 1

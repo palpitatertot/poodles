@@ -5,6 +5,7 @@ using UnityEngine.Networking;
 
 public class CameraController : NetworkBehaviour {
 
+    public float VelocityHeightModifier = 0.1F;
     public float smoothTime = 0.3F;
     private Vector3 dampVelocity = Vector3.zero;
 
@@ -83,7 +84,7 @@ public class CameraController : NetworkBehaviour {
                 locVel = 10;
             }
 
-             Vector3 newPos = transform.position + CameraHeight * Mathf.Min(35,locVel * (float).1);
+             Vector3 newPos = transform.position + CameraHeight * Mathf.Min(35,locVel * VelocityHeightModifier);
             _camTransform.position = Vector3.SmoothDamp(_camTransform.position, newPos, ref dampVelocity, smoothTime);
             _camTransform.LookAt(transform);
 		}

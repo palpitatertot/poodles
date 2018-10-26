@@ -5,11 +5,11 @@ public class DogController : NetworkBehaviour
 {
     public ParticleSystem FrontPeePoofs;
     public ParticleSystem RearPeePoofs;
-	public float FrontRunSpeed;
-	public float RearRunSpeed;
-	public float FrontTurnSpeed;
-	public float RearTurnSpeed;
-	public float MouseSpeed;
+	//public float FrontRunSpeed;
+	//public float RearRunSpeed;
+	//public float FrontTurnSpeed;
+	//public float RearTurnSpeed;
+	//public float MouseSpeed;
 
     private bool isPenned = false;
 
@@ -88,7 +88,7 @@ public class DogController : NetworkBehaviour
 
 
 		if (_front.velocity.magnitude > 1) {
-			DoPeePoofs ();
+			//DoPeePoofs ();
 			if (!_sfx [2].isPlaying) {
 				_sfx [2].pitch = Random.Range (1.0f, 1.2f); //walking sounds
 				_sfx[2].volume = _runStartVolume;
@@ -100,7 +100,7 @@ public class DogController : NetworkBehaviour
 				if(_sfx[2].volume <= 0.0f) _sfx [2].Stop ();
 			}
 
-			StopPeePoofs ();
+			//StopPeePoofs ();
 		}
 
 		if (!Input.anyKey) {

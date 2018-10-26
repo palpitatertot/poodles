@@ -6,6 +6,7 @@ using UnityEngine.Networking;
 public class Splatter : NetworkBehaviour
 {
     private Dictionary<Splatter, Drinker> splatters = new Dictionary<Splatter, Drinker>();
+    private GameObject newSplatObject;
     public Material DogMat0;
     public Material DogMat1;
     public Material DogMat2;
@@ -210,6 +211,8 @@ public class Splatter : NetworkBehaviour
 
     void Start()
     {
+        newSplatObject = new GameObject();
+
         if (isServer)
         {
             splatters.Add(GetComponent<Splatter>(), GetComponent<Drinker>());
@@ -238,7 +241,7 @@ public class Splatter : NetworkBehaviour
 			Vector3 leftVec = Vector3.Cross ( hit.normal, Vector3.up );
 			float randScale = Random.Range(0.5f,1.5f);
 			
-			GameObject newSplatObject = new GameObject(); // make this a pool
+			//GameObject newSplatObject = new GameObject(); // make this a pool
 			newSplatObject.transform.position = hit.point;
 			if( leftVec.magnitude > 0.001f ){
 				newSplatObject.transform.rotation = Quaternion.LookRotation( leftVec, hit.normal );
@@ -259,7 +262,7 @@ public class Splatter : NetworkBehaviour
 
             TrySplat(newSplat);
             
-			GameObject.Destroy( newSplatObject ); // make this a pool
+			//GameObject.Destroy( newSplatObject ); // make this a pool
 		}
 	}
 }
